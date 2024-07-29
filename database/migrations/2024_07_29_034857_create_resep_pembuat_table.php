@@ -14,6 +14,7 @@ class CreateResepPembuatTable extends Migration
             $table->foreignId('pembuat_id')->constrained('pembuat')->onDelete('cascade');
             $table->timestamps();
         });
+        
     }
 
     public function down()

@@ -2,6 +2,14 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ResepController;
+use App\Http\Controllers\BahanController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PembuatController;
+use App\Http\Controllers\LangkahController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +25,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::resource('resep', ResepController::class);
+Route::resource('bahan', BahanController::class);
+Route::resource('kategori', KategoriController::class);
+Route::resource('pembuat', PembuatController::class);
+Route::resource('langkah', LangkahController::class);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
