@@ -6,6 +6,12 @@
     </x-slot>
 
     <div class="container mx-auto mt-8 px-4">
+        <!-- Include Profile Dropdown -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Daftar Resep</h1>
+            <x-profile-dropdown />
+        </div>
+
         <!-- Card with Table -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <div class="p-4">
@@ -51,16 +57,16 @@
                                     <td class="px-4 py-3 text-center text-sm">{{ Str::limit($item->deskripsi, 20) }}</td>
                                     <td class="px-4 py-3 text-center text-sm">
                                         <div class="flex justify-center space-x-2">
-                                            <a href="{{ route('resep.show', $item) }}" class="bg-blue-500 text-white px-3 py-1  shadow hover:bg-blue-600 transition duration-300 text-sm flex items-center">
+                                            <a href="{{ route('resep.show', $item) }}" class="bg-blue-500 text-white px-3 py-1 shadow hover:bg-blue-600 transition duration-300 text-sm flex items-center">
                                                 <i class="bi bi-eye mr-1"></i> Detail
                                             </a>
-                                            <a href="{{ route('resep.edit', $item) }}" class="bg-yellow-500 text-white px-3 py-1  shadow hover:bg-yellow-600 transition duration-300 text-sm flex items-center">
+                                            <a href="{{ route('resep.edit', $item) }}" class="bg-yellow-500 text-white px-3 py-1 shadow hover:bg-yellow-600 transition duration-300 text-sm flex items-center">
                                                 <i class="bi bi-pencil-square mr-1"></i> Edit
                                             </a>
                                             <form action="{{ route('resep.destroy', $item) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="bg-red-500 text-white px-3 py-1  shadow hover:bg-red-600 transition duration-300 text-sm flex items-center" onclick="return confirm('Yakin ingin menghapus resep ini?')">
+                                                <button type="submit" class="bg-red-500 text-white px-3 py-1 shadow hover:bg-red-600 transition duration-300 text-sm flex items-center" onclick="return confirm('Yakin ingin menghapus resep ini?')">
                                                     <i class="bi bi-trash mr-1"></i> Hapus
                                                 </button>
                                             </form>
