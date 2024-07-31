@@ -21,7 +21,16 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    if (Kategori::whereRaw('LOWER(nama) = ?', strtolower($value))->exists()) {
+                        $fail('Nama kategori sudah ada.');
+                    }
+                },
+            ],
         ]);
 
         Kategori::create($validatedData);
@@ -37,7 +46,18 @@ class KategoriController extends Controller
     public function update(Request $request, Kategori $kategori)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($kategori) {
+                    if (Kategori::whereRaw('LOWER(nama) = ?', strtolower($value))
+                        ->where('id', '!=', $kategori->id)
+                        ->exists()) {
+                        $fail('Nama kategori sudah ada.');
+                    }
+                },
+            ],
         ]);
 
         $kategori->update($validatedData);

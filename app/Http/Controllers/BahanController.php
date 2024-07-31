@@ -21,7 +21,16 @@ class BahanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    if (Bahan::whereRaw('LOWER(nama) = ?', strtolower($value))->exists()) {
+                        $fail('Nama bahan sudah ada.');
+                    }
+                },
+            ],
         ]);
 
         Bahan::create($request->all());
@@ -37,7 +46,18 @@ class BahanController extends Controller
     public function update(Request $request, Bahan $bahan)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($bahan) {
+                    if (Bahan::whereRaw('LOWER(nama) = ?', strtolower($value))
+                        ->where('id', '!=', $bahan->id)
+                        ->exists()) {
+                        $fail('Nama bahan sudah ada.');
+                    }
+                },
+            ],
         ]);
 
         $bahan->update($request->all());

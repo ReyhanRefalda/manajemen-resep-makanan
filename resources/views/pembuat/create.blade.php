@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Tambah Kategori') }}
+            {{ __('Tambah Pembuat') }}
         </h2>
     </x-slot>
 
@@ -17,12 +17,17 @@
         @endif
 
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-lg mx-auto p-6">
-            <form action="{{ route('kategori.store') }}" method="POST">
+            <form action="{{ route('pembuat.store') }}" method="POST">
                 @csrf
 
                 <div class="mb-4">
-                    <label for="nama" class="block text-gray-700 text-sm font-medium mb-1">Nama Kategori</label>
+                    <label for="nama" class="block text-gray-700 text-sm font-medium mb-1">Nama</label>
                     <input type="text" name="nama" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama" value="{{ old('nama') }}" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700 text-sm font-medium mb-1">Email</label>
+                    <input type="email" name="email" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="email" value="{{ old('email') }}" required>
                 </div>
 
                 <div class="flex justify-end">

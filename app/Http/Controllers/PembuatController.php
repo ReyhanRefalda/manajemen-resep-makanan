@@ -22,7 +22,7 @@ class PembuatController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|unique:pembuat,email',
         ]);
 
         Pembuat::create($request->all());
@@ -46,7 +46,7 @@ class PembuatController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|unique:pembuat,email,'.$id,
         ]);
 
         $pembuat = Pembuat::findOrFail($id);
