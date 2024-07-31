@@ -21,7 +21,7 @@ use App\Http\Controllers\LangkahController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::delete('/langkah/massdestroy', [LangkahController::class, 'massDestroy'])->name('langkah.massdestroy');
 Route::get('/', function () {
     return view('welcome');
 });
@@ -30,6 +30,8 @@ Route::resource('bahan', BahanController::class);
 Route::resource('kategori', KategoriController::class);
 Route::resource('pembuat', PembuatController::class);
 Route::resource('langkah', LangkahController::class);
+
+
 
 
 Route::get('/dashboard', function () {
