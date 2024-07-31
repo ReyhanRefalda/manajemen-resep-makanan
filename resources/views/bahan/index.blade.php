@@ -11,9 +11,22 @@
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
             <div class="p-4">
                 @if(session('success'))
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative mb-4" role="alert">
+                    <div id="success-alert" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative mb-4" role="alert">
                         {{ session('success') }}
                     </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            setTimeout(function () {
+                                const alert = document.getElementById('success-alert');
+                                if (alert) {
+                                    alert.style.opacity = 0;
+                                    setTimeout(function () {
+                                        alert.style.display = 'none';
+                                    }, 500); // 500ms to wait until the fade out is complete
+                                }
+                            }, 1000); // 3000ms = 3 seconds
+                        });
+                    </script>
                 @endif
                 <div class="flex justify-between items-center mb-6">
                     <a href="{{ route('bahan.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center">
