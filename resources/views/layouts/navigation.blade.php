@@ -25,6 +25,10 @@
                 <i class="fas fa-tags mr-2"></i> <!-- Ikon Kategori -->
                 {{ __('Kategori') }}
             </a>
+            <a href="{{ route('pembuat.index') }}" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-white hover:text-[#FB773C] {{ request()->routeIs('pembuat.index') ? 'bg-[#e36b33]' : '' }}">
+                <i class="fas fa-user-friends mr-2"></i> <!-- Ikon Pembuat -->
+                {{ __('Pembuat') }}
+            </a>
         </div>
     </div>
 </nav>

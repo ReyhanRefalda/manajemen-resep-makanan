@@ -6,15 +6,24 @@
     </x-slot>
 
     <div class="container mx-auto mt-8 px-4">
-        <!-- Edit Form -->
+        @if ($errors->any())
+            <div class="bg-red-500 text-white p-4 rounded mb-4">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-lg mx-auto p-6">
-            <form action="{{ route('kategori.update', $kategori) }}" method="POST">
+            <form action="{{ route('kategori.update', $kategori->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
                 <div class="mb-4">
                     <label for="nama" class="block text-gray-700 text-sm font-medium mb-1">Nama Kategori</label>
-                    <input type="text" name="nama" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama" value="{{ $kategori->nama }}" required>
+                    <input type="text" name="nama" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama" value="{{ old('nama', $kategori->nama) }}" required>
                 </div>
 
                 <div class="flex justify-end">
