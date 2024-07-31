@@ -17,6 +17,7 @@ class Resep extends Model
         'waktu_persiapan',
         'waktu_memasak',
         'kategori_id',
+        'pembuat_id',
         'image',
     ];
 
@@ -37,6 +38,6 @@ class Resep extends Model
 
     public function pembuat()
     {
-        return $this->belongsToMany(Pembuat::class, 'resep_pembuat');
+        return $this->belongsTo(Pembuat::class, 'pembuat_id');
     }
 }

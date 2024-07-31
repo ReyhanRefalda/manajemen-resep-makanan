@@ -15,10 +15,10 @@ class CreateResepTable extends Migration
             $table->integer('waktu_persiapan');
             $table->integer('waktu_memasak');
             $table->foreignId('kategori_id')->constrained('kategori');
+            $table->foreignId('pembuat_id')->constrained('pembuat'); // Tambahkan ini
             $table->string('image')->nullable(); // Jika ada kolom image
             $table->timestamps();
         });
-        
     }
 
     public function down()
@@ -26,3 +26,4 @@ class CreateResepTable extends Migration
         Schema::dropIfExists('resep');
     }
 }
+

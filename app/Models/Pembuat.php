@@ -16,8 +16,8 @@ class Pembuat extends Model
         'email',
     ];
 
-    public function resep()
+    public function reseps()
     {
-        return $this->belongsToMany(Resep::class, 'resep_pembuat');
+        return $this->hasMany(Resep::class, 'pembuat_id');
     }
 }
