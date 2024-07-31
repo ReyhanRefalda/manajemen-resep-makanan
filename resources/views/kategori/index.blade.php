@@ -56,17 +56,21 @@
                                     <td class="px-4 py-2 text-sm text-center">{{ $kategori->nama }}</td>
                                     <td class="px-4 py-2 text-sm text-center">
                                         <div class="flex justify-center space-x-2">
-                                            <a href="{{ route('kategori.edit', $kategori) }}" class="bg-yellow-500 text-white px-3 py-1  shadow hover:bg-yellow-600 transition duration-300 text-xs flex items-center">
-                                                <i class="bi bi-pencil-square mr-1"></i> Edit
+                                            <!-- Edit Button -->
+                                            <a href="{{ route('kategori.edit', $kategori) }}" class="bg-yellow-500 text-white px-3 py-1 shadow hover:bg-yellow-600 transition duration-300 text-xs flex items-center">
+                                                <i class="fa-solid fa-pen p-1"></i>
                                             </a>
+                                            
+                                            <!-- Delete Form -->
                                             <form action="{{ route('kategori.destroy', $kategori) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="bg-red-500 text-white px-3 py-1  shadow hover:bg-red-600 transition duration-300 text-xs flex items-center" onclick="return confirm('Yakin ingin menghapus kategori ini?')">
-                                                    <i class="bi bi-trash mr-1"></i> Hapus
+                                                <button type="submit" class="bg-red-500 text-white px-3 py-1 shadow hover:bg-red-600 transition duration-300 text-xs flex items-center" onclick="return confirm('Yakin ingin menghapus kategori ini?')">
+                                                    <i class="fa-solid fa-trash p-1"></i>
                                                 </button>
                                             </form>
                                         </div>
+                                        
                                     </td>
                                 </tr>
                             @endforeach
