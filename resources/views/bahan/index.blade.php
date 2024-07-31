@@ -1,16 +1,20 @@
 <x-app-layout>
-    <div class="flex justify-between items-center">
-        <!-- Input search with icon -->
-        <div class="relative flex-1">
-            <input type="text" placeholder="Cari Bahan..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 " />
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+    
+    <div class="container mx-auto mt-8 px-4">
+        <div class="flex justify-between items-center m-auto my-5 max-w-4xl">
+            <!-- Input search with icon -->
+            <div class="relative flex-1">
+                <input type="text" placeholder="Cari Bahan..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 " />
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+            </div>
+            
+            <!-- Dropdown profile -->
+            <x-profile-dropdown />
         </div>
         
-        <!-- Dropdown profile -->
-        <x-profile-dropdown />
-    </div>
-
-    <div class="container mx-auto mt-8 px-4">
+        <div class="flex justify-between items-center mb-6 max-w-4xl m-auto">
+            <h1 class="text-2xl font-bold">Daftar Bahan</h1>
+        </div>
     
         <!-- Table with Data -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
@@ -29,7 +33,7 @@
                                         alert.style.display = 'none';
                                     }, 500); // 500ms to wait until the fade out is complete
                                 }
-                            }, 1000); // 3000ms = 3 seconds
+                            }, 6000); // 3000ms = 3 seconds
                         });
                     </script>
                 @endif

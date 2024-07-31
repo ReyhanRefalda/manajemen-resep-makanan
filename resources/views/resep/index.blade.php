@@ -1,16 +1,16 @@
 <x-app-layout>
-    <div class="flex justify-between items-center">
-        <!-- Input search with icon -->
-        <div class="relative flex-1">
-            <input type="text" placeholder="Cari resep..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 " />
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-        </div>
-        
-        <!-- Dropdown profile -->
-        <x-profile-dropdown />
-    </div>
 
     <div class="container mx-auto mt-8 px-4">
+        <div class="flex justify-between items-center my-5">
+            <!-- Input search with icon -->
+            <div class="relative flex-1">
+                <input type="text" placeholder="Cari resep..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 " />
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+            </div>
+            
+            <!-- Dropdown profile -->
+            <x-profile-dropdown />
+        </div>
         <!-- Include Profile Dropdown -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Daftar Resep</h1>
@@ -33,7 +33,7 @@
                                         alert.style.display = 'none';
                                     }, 500); // 500ms to wait until the fade out is complete
                                 }
-                            }, 1000); // 3000ms = 3 seconds
+                            }, 6000); // 3000ms = 3 seconds
                         });
                     </script>
                 @endif
@@ -70,10 +70,10 @@
                                         @endif
                                     </td>
                                     <td class="px-4 py-3 text-center text-sm">{{ $item->nama }}</td>
+                                    <td class="px-4 py-3 text-center text-sm">{{ $item->pembuat->nama }}</td>
                                     <td class="px-4 py-3 text-center text-sm">{{ $item->waktu_persiapan }}</td>
                                     <td class="px-4 py-3 text-center text-sm">{{ $item->waktu_memasak }}</td>
                                     <td class="px-4 py-3 text-center text-sm">{{ $item->kategori->nama }}</td>
-                                    <td class="px-4 py-3 text-center text-sm">{{ $item->pembuat->nama }}</td>
                                     <td class="px-4 py-3 text-center text-sm">{{ Str::limit($item->deskripsi, 20) }}</td>
                                     <td class="px-4 py-3 text-center text-sm">
                                         <div class="flex justify-center space-x-2">
