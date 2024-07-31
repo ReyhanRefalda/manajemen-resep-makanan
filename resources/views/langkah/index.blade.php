@@ -60,7 +60,7 @@
                         </tbody>
                     </table>
                     <div class="flex justify-end mt-4">
-                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition duration-300">
+                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition duration-300" onclick="return confirm('Yakin ingin menghapus resep ini?')">
                             Hapus Terpilih
                         </button>
                     </div>
