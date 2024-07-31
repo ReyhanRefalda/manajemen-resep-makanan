@@ -21,17 +21,23 @@ class LangkahController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'resep_id' => 'required|exists:resep,id',
-            'nomor' => 'required|integer',
-            'deskripsi' => 'required',
-        ]);
+{
+    $steps = $request->input('steps');
+
+    foreach ($steps as $step) {
+        $validatedData = [
+            'resep_id' => $request->input('resep_id'),
+            'nomor' => $step['nomor'],
+            'deskripsi' => $step['deskripsi'],
+        ];
 
         Langkah::create($validatedData);
-
-        return redirect()->route('langkah.index')->with('success', 'Langkah berhasil ditambahkan.');
     }
+
+    return redirect()->route('langkah.index')->with('success', 'Langkah berhasil ditambahkan.');
+}
+
+
 
     public function show(Langkah $langkah)
     {

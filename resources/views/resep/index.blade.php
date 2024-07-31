@@ -44,10 +44,12 @@
                             <tr>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">ID</th>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Gambar</th>
-                                <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Nama</th>
+                                <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Nama Resep</th>
+                                <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Pembuat</th>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Waktu Persiapan</th>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Waktu Memasak</th>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Kategori</th>
+                                
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Deskripsi</th>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Aksi</th>
                             </tr>
@@ -67,6 +69,7 @@
                                     <td class="px-4 py-3 text-center text-sm">{{ $item->waktu_persiapan }}</td>
                                     <td class="px-4 py-3 text-center text-sm">{{ $item->waktu_memasak }}</td>
                                     <td class="px-4 py-3 text-center text-sm">{{ $item->kategori->nama }}</td>
+                                    <td class="px-4 py-3 text-center text-sm">{{ $item->pembuat->nama }}</td>
                                     <td class="px-4 py-3 text-center text-sm">{{ Str::limit($item->deskripsi, 20) }}</td>
                                     <td class="px-4 py-3 text-center text-sm">
                                         <div class="flex justify-center space-x-2">

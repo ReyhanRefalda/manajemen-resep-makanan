@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Resep;
 use App\Models\Kategori;
+use App\Models\Pembuat; // Pastikan untuk mengimpor model Pembuat
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,14 +12,15 @@ class ResepController extends Controller
 {
     public function index()
     {
-        $resep = Resep::with('kategori', 'bahan', 'langkah', 'pembuat')->get();
+        $resep = Resep::with('kategori', 'pembuat')->get();
         return view('resep.index', compact('resep'));
     }
 
     public function create()
     {
         $kategoris = Kategori::all();
-        return view('resep.create', compact('kategoris'));
+        $pembuat = Pembuat::all(); // Ambil data pembuat
+        return view('resep.create', compact('kategoris', 'pembuat'));
     }
 
     public function store(Request $request)
@@ -29,8 +31,13 @@ class ResepController extends Controller
             'waktu_persiapan' => 'required|integer',
             'waktu_memasak' => 'required|integer',
             'kategori_id' => 'required|exists:kategori,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048' // Change here
-        ]);
+            'pembuat_id' => 'required|exists:pembuat,id', // Validasi pembuat_id
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ],
+     [
+        'nama.required' => 'Nama resep harus diisi',
+        'deskripsi' => 'Deskripsi harus diisi'
+     ]);
 
         $imagePath = $request->file('image')->store('images', 'public');
         $validatedData['image'] = $imagePath;
@@ -48,7 +55,8 @@ class ResepController extends Controller
     public function edit(Resep $resep)
     {
         $kategoris = Kategori::all();
-        return view('resep.edit', compact('resep', 'kategoris'));
+        $pembuat = Pembuat::all(); // Ambil data pembuat
+        return view('resep.edit', compact('resep', 'kategoris', 'pembuat'));
     }
 
     public function update(Request $request, Resep $resep)
@@ -59,7 +67,8 @@ class ResepController extends Controller
             'waktu_persiapan' => 'required|integer',
             'waktu_memasak' => 'required|integer',
             'kategori_id' => 'required|exists:kategori,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048' // Change here
+            'pembuat_id' => 'required|exists:pembuat,id', // Validasi pembuat_id
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         if ($request->hasFile('image')) {
