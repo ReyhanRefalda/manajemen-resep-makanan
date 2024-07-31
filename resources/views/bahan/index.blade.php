@@ -59,13 +59,13 @@
                                     <td class="px-4 py-3 text-center text-sm">
                                         <div class="flex justify-center space-x-2">
                                             <a href="{{ route('bahan.edit', $bahan->id) }}" class="bg-yellow-500 text-white px-3 py-1  shadow hover:bg-yellow-600 transition duration-300 text-xs flex items-center">
-                                                <i class="bi bi-pencil-square mr-1"></i> Edit
+                                                <i class="fa-solid fa-pen p-1"></i>
                                             </a>
                                             <form action="{{ route('bahan.destroy', $bahan->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="bg-red-500 text-white px-3 py-1  shadow hover:bg-red-600 transition duration-300 text-xs flex items-center" onclick="return confirm('Yakin ingin menghapus bahan ini?')">
-                                                    <i class="bi bi-trash mr-1"></i> Hapus
+                                                    <i class="fa-solid fa-trash p-1"></i>
                                                 </button>
                                             </form>
                                         </div>
