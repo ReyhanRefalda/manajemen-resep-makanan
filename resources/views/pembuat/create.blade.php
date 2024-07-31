@@ -15,7 +15,7 @@
                 </ul>
             </div>
         @endif
-
+            
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-lg mx-auto p-6">
             <form action="{{ route('pembuat.store') }}" method="POST">
                 @csrf

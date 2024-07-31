@@ -1,22 +1,26 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Daftar Resep') }}
-        </h2>
-    </x-slot>
+    <div class="flex justify-between items-center">
+        <!-- Input search with icon -->
+        <div class="relative flex-1">
+            <input type="text" placeholder="Cari resep..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 " />
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+        </div>
+        
+        <!-- Dropdown profile -->
+        <x-profile-dropdown />
+    </div>
 
     <div class="container mx-auto mt-8 px-4">
         <!-- Include Profile Dropdown -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Daftar Resep</h1>
-            <x-profile-dropdown />
         </div>
 
         <!-- Card with Table -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <div class="p-4">
                 @if(session('success'))
-                    <div id="success-alert" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative mb-4" role="alert">
+                    <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4" role="alert">
                         {{ session('success') }}
                     </div>
                     <script>

@@ -1,15 +1,33 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Daftar Pembuat') }}
-        </h2>
-    </x-slot>
+    <div class="flex justify-between items-center">
+        <!-- Input search with icon -->
+        <div class="relative flex-1">
+            <input type="text" placeholder="Cari Pembuat..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 " />
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+        </div>
+        
+        <!-- Dropdown profile -->
+        <x-profile-dropdown />
+    </div>
 
     <div class="container mx-auto mt-8 px-4">
         @if (session('success'))
             <div class="bg-green-500 text-white p-4 rounded mb-4">
                 {{ session('success') }}
             </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    setTimeout(function () {
+                        const alert = document.getElementById('success-alert');
+                        if (alert) {
+                            alert.style.opacity = 0;
+                            setTimeout(function () {
+                                alert.style.display = 'none';
+                            }, 500); // 500ms to wait until the fade out is complete
+                        }
+                    }, 1000); // 3000ms = 3 seconds
+                });
+            </script>
         @endif
 
         <!-- Button Tambah Pembuat -->
