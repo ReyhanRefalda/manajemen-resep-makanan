@@ -31,6 +31,10 @@ class KategoriController extends Controller
                     }
                 },
             ],
+        ], [
+            'nama.required' => 'Nama kategori harus diisi',
+            'nama.string' => 'Nama kategori harus berupa huruf',
+            'nama.max' => 'Nama kategori tidak boleh lebih dari 255 karakter',
         ]);
 
         Kategori::create($validatedData);
@@ -58,6 +62,10 @@ class KategoriController extends Controller
                     }
                 },
             ],
+        ], [
+            'nama.required' => 'Nama kategori harus diisi',
+            'nama.string' => 'Nama kategori harus berupa huruf',
+            'nama.max' => 'Nama kategori tidak boleh lebih dari 255 karakter',
         ]);
 
         $kategori->update($validatedData);

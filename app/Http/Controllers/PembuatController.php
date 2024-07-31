@@ -23,6 +23,12 @@ class PembuatController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:pembuat,email',
+        ],[
+            'nama.required' => 'Nama pembuat harus diisi',
+            'nama.string' => 'Nama pembuat harus berupa huruf',
+            'email.required' => 'Email harus diisi',
+            'email.unique' => 'Email sudah terdaftar',
+            
         ]);
 
         Pembuat::create($request->all());
@@ -47,6 +53,12 @@ class PembuatController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:pembuat,email,'.$id,
+        ],[
+            'nama.required' => 'Nama pembuat harus diisi',
+            'nama.string' => 'Nama pembuat harus berupa huruf',
+            'email.required' => 'Email harus diisi',
+            'email.unique' => 'Email sudah terdaftar',
+            
         ]);
 
         $pembuat = Pembuat::findOrFail($id);
