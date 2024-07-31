@@ -14,35 +14,65 @@
 
                 <div class="mb-4">
                     <label for="nama" class="block text-gray-700 text-sm font-medium mb-1">Nama Resep</label>
-                    <input type="text" name="nama" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama" value="{{  $resep->nama }}" required>
+                    <input type="text" name="nama" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama" value="{{  $resep->nama }}" >
+                    @error('nama')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="mb-4">
                     <label for="deskripsi" class="block text-gray-700 text-sm font-medium mb-1">Deskripsi</label>
-                    <textarea name="deskripsi" class="form-textarea w-full border-gray-300 rounded-md shadow-sm" id="deskripsi" required>{{ $resep->deskripsi }}</textarea>
+                    <textarea name="deskripsi" class="form-textarea w-full border-gray-300 rounded-md shadow-sm" id="deskripsi" >{{ $resep->deskripsi }}</textarea>
+                    @error('deskripsi')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="mb-4">
                     <label for="waktu_persiapan" class="block text-gray-700 text-sm font-medium mb-1">Waktu Persiapan (menit)</label>
-                    <input type="number" name="waktu_persiapan" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="waktu_persiapan" value="{{ $resep->waktu_persiapan }}" required>
+                    <input type="number" name="waktu_persiapan" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="waktu_persiapan" value="{{ $resep->waktu_persiapan }}" >
+                    @error('waktu_persiapan')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="mb-4">
                     <label for="waktu_memasak" class="block text-gray-700 text-sm font-medium mb-1">Waktu Memasak (menit)</label>
-                    <input type="number" name="waktu_memasak" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="waktu_memasak" value="{{  $resep->waktu_memasak }}" required>
+                    <input type="number" name="waktu_memasak" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="waktu_memasak" value="{{  $resep->waktu_memasak }}" >
+                    @error('waktu_memasak')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label for="pembuat_id" class="block text-gray-700 text-sm font-medium mb-1">Pembuat</label>
+                    <select name="pembuat_id" class="form-select w-full border-gray-300 rounded-md shadow-sm" id="pembuat_id">
+                        @foreach($pembuat as $p)
+                            <option value="{{ $p->id }}" {{ $p->id == $resep->p_id ? 'selected' : '' }}>
+                                {{ $p->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('pembuat_id')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="mb-4">
                     <label for="kategori_id" class="block text-gray-700 text-sm font-medium mb-1">Kategori</label>
-                    <select name="kategori_id" class="form-select w-full border-gray-300 rounded-md shadow-sm" id="kategori_id" required>
+                    <select name="kategori_id" class="form-select w-full border-gray-300 rounded-md shadow-sm" id="kategori_id" >
                         @foreach($kategoris as $kategori)
                             <option value="{{ $kategori->id }}" {{ $kategori->id == $resep->kategori_id ? 'selected' : '' }}>
                                 {{ $kategori->nama }}
                             </option>
                         @endforeach
                     </select>
+                    @error('kategori_id')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
+                
                 <div class="mb-4">
                     <label for="image" class="block text-gray-700 text-sm font-medium mb-1">Gambar</label>
                     @if($resep->image)

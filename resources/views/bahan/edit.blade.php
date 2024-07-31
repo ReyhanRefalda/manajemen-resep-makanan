@@ -23,7 +23,10 @@
 
                 <div class="mb-4">
                     <label for="nama" class="block text-gray-700 text-sm font-medium mb-1">Nama Bahan</label>
-                    <input type="text" name="nama" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama" value="{{ old('nama', $bahan->nama) }}" required>
+                    <input type="text" name="nama" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama" value="{{ old('nama', $bahan->nama) }}" >
+                    @error('nama')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="flex justify-end">

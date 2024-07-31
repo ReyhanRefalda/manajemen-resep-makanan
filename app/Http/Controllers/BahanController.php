@@ -26,11 +26,15 @@ class BahanController extends Controller
                 'string',
                 'max:255',
                 function ($attribute, $value, $fail) {
-                    if (Bahan::whereRaw('LOWER(nama) = ?', strtolower($value))->exists()) {
+                    if (Bahan::whereRaw('LOWER(nama) = ?', [strtolower($value)])->exists()) {
                         $fail('Nama bahan sudah ada.');
                     }
                 },
             ],
+        ], [
+            'nama.required' => 'Nama bahan harus diisi',
+            'nama.string' => 'Nama bahan harus berupa huruf',
+            'nama.max' => 'Nama bahan tidak boleh lebih dari 255 karakter',
         ]);
 
         Bahan::create($request->all());
@@ -50,16 +54,18 @@ class BahanController extends Controller
                 'required',
                 'string',
                 'max:255',
-                function ($attribute, $value, $fail) use ($bahan) {
-                    if (Bahan::whereRaw('LOWER(nama) = ?', strtolower($value))
-                        ->where('id', '!=', $bahan->id)
-                        ->exists()) {
+                function ($attribute, $value, $fail) {
+                    if (Bahan::whereRaw('LOWER(nama) = ?', [strtolower($value)])->exists()) {
                         $fail('Nama bahan sudah ada.');
                     }
                 },
             ],
+        ], [
+            'nama.required' => 'Nama bahan harus diisi',
+            'nama.string' => 'Nama bahan harus berupa huruf',
+            'nama.max' => 'Nama bahan tidak boleh lebih dari 255 karakter',
         ]);
-
+        
         $bahan->update($request->all());
 
         return redirect()->route('bahan.index')->with('success', 'Bahan berhasil diperbarui.');
