@@ -36,8 +36,8 @@ class ResepController extends Controller
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
             'deskripsi' => 'required',
-            'waktu_persiapan' => 'required|integer|min:1',
-            'waktu_memasak' => 'required|integer|min:1',
+            'waktu_persiapan' => 'required',
+            'waktu_memasak' => 'required',
             'kategori_id' => 'required|exists:kategori,id',
             'pembuat_id' => 'required|exists:pembuat,id', // Validasi pembuat_id
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -46,11 +46,7 @@ class ResepController extends Controller
             'nama.string' => 'Nama resep harus berupa huruf',
             'deskripsi.required' => 'Deskripsi harus diisi',
             'waktu_persiapan.required' => 'Waktu persiapan harus diisi',
-            'waktu_persiapan.min' => 'Waktu persiapan minimal 1',
-            'waktu_persiapan.integer' => 'Waktu persiapan harus berupa angka',
             'waktu_memasak.required' => 'Waktu memasak harus diisi',
-            'waktu_memasak.min' => 'Waktu memasak minimal 1',
-            'waktu_memasak.integer' => 'Waktu memasak harus berupa angka',
             'kategori_id.required' => 'Kategori harus diisi',
             'pembuat_id.required' => 'Nama Pembuat harus diisi',
             'image.required' => 'Image harus diisi',
@@ -83,8 +79,8 @@ class ResepController extends Controller
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
             'deskripsi' => 'required',
-            'waktu_persiapan' => 'required|integer|min:1',
-            'waktu_memasak' => 'required|integer|min:1',
+            'waktu_persiapan' => 'required',
+            'waktu_memasak' => 'required',
             'kategori_id' => 'required|exists:kategori,id',
             'pembuat_id' => 'required|exists:pembuat,id', // Validasi pembuat_id
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -93,11 +89,7 @@ class ResepController extends Controller
             'nama.string' => 'Nama resep harus berupa huruf',
             'deskripsi.required' => 'Deskripsi harus diisi',
             'waktu_persiapan.required' => 'Waktu persiapan harus diisi',
-            'waktu_persiapan.min' => 'Waktu persiapan minimal 1',
-            'waktu_persiapan.integer' => 'Waktu persiapan harus berupa angka',
             'waktu_memasak.required' => 'Waktu memasak harus diisi',
-            'waktu_memasak.min' => 'Waktu memasak minimal 1',
-            'waktu_memasak.integer' => 'Waktu memasak harus berupa angka',
             'kategori_id.required' => 'Kategori harus diisi',
             'pembuat_id.required' => 'Nama Pembuat harus diisi',
             'image.required' => 'Image harus diisi',
