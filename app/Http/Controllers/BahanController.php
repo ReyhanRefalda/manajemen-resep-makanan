@@ -7,11 +7,20 @@ use Illuminate\Http\Request;
 
 class BahanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bahans = Bahan::all();
-        return view('bahan.index', compact('bahans'));
+        $query = Bahan::query();
+    
+        if ($request->has('search')) {
+            $query->where('nama', 'like', '%' . $request->search . '%');
+        }
+    
+        $bahans = $query->get();
+    
+        return view('bahan.index', compact('bahans'))->with('searchQuery', $request->search);
     }
+    
+
 
     public function create()
     {

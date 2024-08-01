@@ -1,11 +1,12 @@
 <x-app-layout>
-
     <div class="container mx-auto mt-8 px-4">
         <div class="flex justify-between items-center my-5 max-w-4xl m-auto">
             <!-- Input search with icon -->
             <div class="relative flex-1">
-                <input type="text" placeholder="Cari Langkah ..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 " />
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+                <form action="{{ route('langkah.index') }}" method="GET">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Langkah ..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+                </form>
             </div>
             
             <!-- Dropdown profile -->
@@ -18,23 +19,24 @@
 
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto p-6">
             @if(session('success'))
-                    <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4" role="alert">
-                        {{ session('success') }}
-                    </div>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            setTimeout(function () {
-                                const alert = document.getElementById('success-alert');
-                                if (alert) {
-                                    alert.style.opacity = 0;
-                                    setTimeout(function () {
-                                        alert.style.display = 'none';
-                                    }, 500); // 500ms to wait until the fade out is complete
-                                }
-                            }, 6000); // 3000ms = 3 seconds
-                        });
-                    </script>
-                @endif
+                <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4" role="alert">
+                    {{ session('success') }}
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        setTimeout(function () {
+                            const alert = document.getElementById('success-alert');
+                            if (alert) {
+                                alert.style.opacity = 0;
+                                setTimeout(function () {
+                                    alert.style.display = 'none';
+                                }, 500); // 500ms to wait until the fade out is complete
+                            }
+                        }, 6000); // 6000ms = 6 seconds
+                    });
+                </script>
+            @endif
+            
             <div class="flex justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-800">Langkah-langkah Resep</h3>
                 <a href="{{ route('langkah.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
@@ -43,7 +45,7 @@
             </div>
 
             @if($resep->isEmpty())
-                <p class="text-gray-500">Belum ada langkah yang ditambahkan.</p>
+                <p class="text-gray-500">Tidak ada langkah ditemukan untuk pencarian "{{ request('search') }}"</p>
             @else
                 <form action="{{ route('langkah.massdestroy') }}" method="POST">
                     @csrf
@@ -67,13 +69,12 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             <input type="checkbox" name="ids[]" value="{{ $step->id }}" class="form-checkbox">
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $index + 1 }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loop->iteration }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $res->nama }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {{ $step->nomor }}. {{ $step->deskripsi }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                           
                                             <a href="{{ route('langkah.edit', $step->id) }}" class="text-green-600 hover:text-green-900 ml-4">Edit</a>
                                         </td>
                                     </tr>
@@ -82,7 +83,7 @@
                         </tbody>
                     </table>
                     <div class="flex justify-end mt-4">
-                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition duration-300" onclick="return confirm('Yakin ingin menghapus resep ini?')">
+                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition duration-300" onclick="return confirm('Yakin ingin menghapus langkah yang dipilih?')">
                             Hapus Terpilih
                         </button>
                     </div>

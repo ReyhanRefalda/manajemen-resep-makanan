@@ -7,10 +7,15 @@ use Illuminate\Http\Request;
 
 class PembuatController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pembuat = Pembuat::all();
-        return view('pembuat.index', compact('pembuat'));
+        $search = $request->get('search');
+        $pembuat = Pembuat::when($search, function ($query, $search) {
+            return $query->where('nama', 'like', "%{$search}%")
+                         ->orWhere('email', 'like', "%{$search}%");
+        })->get();
+
+        return view('pembuat.index', compact('pembuat', 'search'));
     }
 
     public function create()

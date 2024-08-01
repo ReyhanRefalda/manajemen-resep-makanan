@@ -22,6 +22,8 @@ use App\Http\Controllers\LangkahController;
 |
 */
 Route::delete('/langkah/massdestroy', [LangkahController::class, 'massDestroy'])->name('langkah.massdestroy');
+Route::get('/search-resep', [ResepController::class, 'searchResep'])->name('search-resep');
+
 Route::get('/', function () {
     return view('welcome');
 });
