@@ -7,12 +7,24 @@ use App\Models\Resep;
 use Illuminate\Http\Request;
 
 class LangkahController extends Controller
-{
-    public function index()
+{public function index(Request $request)
     {
-        $resep = Resep::with('langkah')->get();
+        $search = $request->input('search');
+    
+        $resepQuery = Resep::query();
+    
+        if ($search) {
+            // Cari resep yang sesuai dengan nama
+            $resepQuery->where('nama', 'LIKE', "%{$search}%");
+        }
+    
+        $resep = $resepQuery->with('langkah')->get();
+    
         return view('langkah.index', compact('resep'));
     }
+    
+    
+    
 
     public function create()
     {

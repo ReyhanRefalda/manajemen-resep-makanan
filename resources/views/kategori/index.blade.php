@@ -1,19 +1,25 @@
 <x-app-layout>
-    
     <div class="container mx-auto mt-8 px-4">
         <div class="flex justify-between items-center my-5 max-w-4xl m-auto">
             <!-- Input search with icon -->
             <div class="relative flex-1">
-                <input type="text" placeholder="Cari Kategori..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 " />
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+                <form action="{{ route('kategori.index') }}" method="GET" class="flex">
+                    <input type="text" name="search" placeholder="Cari Kategori..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request()->get('search') }}" />
+                    <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
             </div>
-            
+
             <!-- Dropdown profile -->
             <x-profile-dropdown />
         </div>
         <div class="flex justify-between items-center mb-6 max-w-4xl m-auto">
             <h1 class="text-2xl font-bold">Daftar Kategori</h1>
         </div>
+
+        <!-- Alert untuk pencarian -->
+       
         <!-- Card untuk Tabel -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
             <div class="p-4">
@@ -44,13 +50,13 @@
                     <table class="w-full bg-white border border-gray-200 rounded-lg">
                         <thead class="bg-gray-200 text-gray-600">
                             <tr>
-                                <th class="px-4 py-3 text-xs font-medium uppercase tracking-wider text-center ">No</th>
-                                <th class="px-4 py-3 text-xs font-medium uppercase tracking-wider text-center ">Nama</th>
-                                <th class="px-4 py-3 text-xs font-medium uppercase tracking-wider text-center ">Aksi</th>
+                                <th class="px-4 py-3 text-xs font-medium uppercase tracking-wider text-center">No</th>
+                                <th class="px-4 py-3 text-xs font-medium uppercase tracking-wider text-center">Nama</th>
+                                <th class="px-4 py-3 text-xs font-medium uppercase tracking-wider text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-700">
-                            @foreach($kategoris as $kategori)
+                            @forelse($kategoris as $kategori)
                                 <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-300">
                                     <td class="px-4 py-2 text-sm text-center">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-2 text-sm text-center">{{ $kategori->nama }}</td>
@@ -70,10 +76,13 @@
                                                 </button>
                                             </form>
                                         </div>
-                                        
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center text-gray-500 py-4">Tidak ada kategori yang ditemukan untuk pencarian "{{ request('search') }}"</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

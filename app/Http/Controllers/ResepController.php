@@ -10,12 +10,20 @@ use Illuminate\Support\Facades\Storage;
 
 class ResepController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $resep = Resep::with('kategori', 'pembuat')->get();
-        return view('resep.index', compact('resep'));
+        $search = $request->get('search');
+        $reseps = Resep::with('kategori', 'pembuat')
+                        ->where('nama', 'like', '%' . $search . '%')
+                        ->get();
+
+        return view('resep.index', compact('reseps'));
     }
 
+   
+
+
+    
     public function create()
     {
         $kategoris = Kategori::all();

@@ -1,12 +1,17 @@
 <x-app-layout>
-    
     <div class="container mx-auto mt-8 px-4">
         <div class="flex justify-between items-center m-auto my-5 max-w-4xl">
             <!-- Input search with icon -->
-            <div class="relative flex-1">
-                <input type="text" placeholder="Cari Bahan..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 " />
+            <form method="GET" action="{{ route('bahan.index') }}" class="relative flex-1">
+                <input 
+                    type="text" 
+                    name="search" 
+                    value="{{ request('search') }}" 
+                    placeholder="Cari Bahan..." 
+                    class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                />
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-            </div>
+            </form>
             
             <!-- Dropdown profile -->
             <x-profile-dropdown />
@@ -15,6 +20,12 @@
         <div class="flex justify-between items-center mb-6 max-w-4xl m-auto">
             <h1 class="text-2xl font-bold">Daftar Bahan</h1>
         </div>
+
+        @if(session('error'))
+            <div class="bg-red-500 text-white p-4 rounded mb-4 max-w-4xl mx-auto" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
     
         <!-- Table with Data -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
@@ -52,26 +63,30 @@
                             </tr>
                         </thead>
                         <tbody class="text-gray-700">
-                            @foreach($bahans as $bahan)
+                            @forelse($bahans as $bahan)
                                 <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-300">
                                     <td class="px-4 py-3 text-center text-sm">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-3 text-center text-sm">{{ $bahan->nama }}</td>
                                     <td class="px-4 py-3 text-center text-sm">
                                         <div class="flex justify-center space-x-2">
-                                            <a href="{{ route('bahan.edit', $bahan->id) }}" class="bg-yellow-500 text-white px-3 py-1  shadow hover:bg-yellow-600 transition duration-300 text-xs flex items-center">
+                                            <a href="{{ route('bahan.edit', $bahan->id) }}" class="bg-yellow-500 text-white px-3 py-1 shadow hover:bg-yellow-600 transition duration-300 text-xs flex items-center">
                                                 <i class="fa-solid fa-pen p-1"></i>
                                             </a>
                                             <form action="{{ route('bahan.destroy', $bahan->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="bg-red-500 text-white px-3 py-1  shadow hover:bg-red-600 transition duration-300 text-xs flex items-center" onclick="return confirm('Yakin ingin menghapus bahan ini?')">
+                                                <button type="submit" class="bg-red-500 text-white px-3 py-1 shadow hover:bg-red-600 transition duration-300 text-xs flex items-center" onclick="return confirm('Yakin ingin menghapus bahan ini?')">
                                                     <i class="fa-solid fa-trash p-1"></i>
                                                 </button>
                                             </form>
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center text-gray-500 py-4">Tidak ada bahan yang ditemukan untuk pencarian "{{ request('search') }}"</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
