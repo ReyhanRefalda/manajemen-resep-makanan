@@ -11,16 +11,19 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-   
-
     
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased">
     <div class="flex min-h-screen bg-gray-100">
         <!-- Sidebar -->
-        @include('layouts.navigation')
+        <div class="w-64 bg-[#FB773C] text-white fixed h-full">
+            @include('layouts.navigation')
+        </div>
 
         <!-- Page Content -->
         <div class="flex-1 p-10 ml-64">
@@ -37,5 +40,17 @@
             </main>
         </div>
     </div>
+
+    <!-- Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $('#bahan').select2({
+                placeholder: "Pilih Bahan",
+                allowClear: true
+            });
+        });
+    </script>
 </body>
 </html>

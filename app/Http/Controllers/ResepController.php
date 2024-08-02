@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resep;
+use App\Models\Bahan;
 use App\Models\Kategori;
-use App\Models\Pembuat; // Pastikan untuk mengimpor model Pembuat
+use App\Models\Pembuat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,53 +14,61 @@ class ResepController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $reseps = Resep::with('kategori', 'pembuat')
-                        ->where('nama', 'like', '%' . $search . '%')
-                        ->get();
+        $reseps = Resep::with('bahans', 'pembuat', 'kategori')
+            ->where('nama', 'like', '%' . $search . '%')
+            ->get();
 
         return view('resep.index', compact('reseps'));
     }
 
-   
+    public function dashboard()
+    {
+        $reseps = Resep::with('kategori', 'pembuat')->get();
 
+        return view('dashboard', compact('reseps'));
+    }
 
-    
     public function create()
     {
         $kategoris = Kategori::all();
-        $pembuat = Pembuat::all(); // Ambil data pembuat
-        return view('resep.create', compact('kategoris', 'pembuat'));
+        $pembuat = Pembuat::all();
+        $bahans = Bahan::all();
+
+        return view('resep.create', compact('kategoris', 'pembuat', 'bahans'));
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
-            'deskripsi' => 'required',
-            'waktu_persiapan' => 'required',
-            'waktu_memasak' => 'required',
+            'deskripsi' => 'nullable|string',
+            'waktu_persiapan' => 'nullable|string',
+            'waktu_memasak' => 'nullable|string',
+            'pembuat_id' => 'required|exists:pembuat,id',
             'kategori_id' => 'required|exists:kategori,id',
-            'pembuat_id' => 'required|exists:pembuat,id', // Validasi pembuat_id
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ],[
-            'nama.required' => 'Nama resep harus diisi',
-            'nama.string' => 'Nama resep harus berupa huruf',
-            'deskripsi.required' => 'Deskripsi harus diisi',
-            'waktu_persiapan.required' => 'Waktu persiapan harus diisi',
-            'waktu_memasak.required' => 'Waktu memasak harus diisi',
-            'kategori_id.required' => 'Kategori harus diisi',
-            'pembuat_id.required' => 'Nama Pembuat harus diisi',
-            'image.required' => 'Image harus diisi',
-            'image.mimes' => 'Image harus berformat jpeg,png,jpg,gif',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'bahan.*' => 'exists:bahan,id',
+            'jumlah.*' => 'numeric|min:1',
         ]);
 
+        $resep = Resep::create($validatedData);
 
-        $imagePath = $request->file('image')->store('images', 'public');
-        $validatedData['image'] = $imagePath;
+        // Handle image upload if exists
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $resep->image = $imagePath;
+            $resep->save();
+        }
 
-        Resep::create($validatedData);
+        // Handle many-to-many relation for bahan
+        $bahanIds = $request->input('bahan', []);
+        $jumlah = $request->input('jumlah', []);
 
-        return redirect()->route('resep.index')->with('success', 'Resep berhasil ditambahkan.');
+        foreach ($bahanIds as $bahanId) {
+            $resep->bahans()->attach($bahanId, ['jumlah' => $jumlah[$bahanId] ?? 1]);
+        }
+
+        return redirect()->route('resep.index')->with('success', 'Resep berhasil dibuat.');
     }
 
     public function show(Resep $resep)
@@ -70,30 +79,24 @@ class ResepController extends Controller
     public function edit(Resep $resep)
     {
         $kategoris = Kategori::all();
-        $pembuat = Pembuat::all(); // Ambil data pembuat
-        return view('resep.edit', compact('resep', 'kategoris', 'pembuat'));
+        $pembuat = Pembuat::all();
+        $bahans = Bahan::all();
+
+        return view('resep.edit', compact('resep', 'kategoris', 'pembuat', 'bahans'));
     }
 
     public function update(Request $request, Resep $resep)
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
-            'deskripsi' => 'required',
-            'waktu_persiapan' => 'required',
-            'waktu_memasak' => 'required',
+            'deskripsi' => 'nullable|string',
+            'waktu_persiapan' => 'nullable|string',
+            'waktu_memasak' => 'nullable|string',
             'kategori_id' => 'required|exists:kategori,id',
-            'pembuat_id' => 'required|exists:pembuat,id', // Validasi pembuat_id
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ],[
-            'nama.required' => 'Nama resep harus diisi',
-            'nama.string' => 'Nama resep harus berupa huruf',
-            'deskripsi.required' => 'Deskripsi harus diisi',
-            'waktu_persiapan.required' => 'Waktu persiapan harus diisi',
-            'waktu_memasak.required' => 'Waktu memasak harus diisi',
-            'kategori_id.required' => 'Kategori harus diisi',
-            'pembuat_id.required' => 'Nama Pembuat harus diisi',
-            'image.required' => 'Image harus diisi',
-            'image.mimes' => 'Image harus berformat jpeg,png,jpg,gif',
+            'pembuat_id' => 'required|exists:pembuat,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'bahan.*' => 'exists:bahan,id',
+            'jumlah.*' => 'numeric|min:1',
         ]);
 
         if ($request->hasFile('image')) {
@@ -105,6 +108,15 @@ class ResepController extends Controller
         }
 
         $resep->update($validatedData);
+
+        // Update many-to-many relation for bahan
+        $bahanIds = $request->input('bahan', []);
+        $jumlah = $request->input('jumlah', []);
+
+        $resep->bahans()->sync([]);
+        foreach ($bahanIds as $bahanId) {
+            $resep->bahans()->attach($bahanId, ['jumlah' => $jumlah[$bahanId] ?? 1]);
+        }
 
         return redirect()->route('resep.index')->with('success', 'Resep berhasil diperbarui.');
     }

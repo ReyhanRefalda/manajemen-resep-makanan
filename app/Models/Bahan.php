@@ -9,14 +9,14 @@ class Bahan extends Model
 {
     use HasFactory;
 
-    protected $table = 'bahan';
+    protected $table = 'bahan'; // Nama tabel yang benar
 
     protected $fillable = [
         'nama',
     ];
 
-    public function resep()
+    public function reseps()
     {
-        return $this->belongsToMany(Resep::class, 'resep_bahan');
+        return $this->belongsToMany(Resep::class, 'resep_bahan')->withPivot('jumlah');
     }
 }

@@ -45,7 +45,13 @@
             </div>
 
             @if($resep->isEmpty())
-                <p class="text-gray-500">Tidak ada langkah ditemukan untuk pencarian "{{ request('search') }}"</p>
+                <p class="text-gray-500">
+                    @if(request('search'))
+                        Tidak ada langkah ditemukan untuk pencarian "{{ request('search') }}"
+                    @else
+                        Tidak ada data langkah yang tersedia.
+                    @endif
+                </p>
             @else
                 <form action="{{ route('langkah.massdestroy') }}" method="POST">
                     @csrf
