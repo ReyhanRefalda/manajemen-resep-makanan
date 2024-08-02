@@ -79,9 +79,15 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="3" class="text-center text-gray-500 py-4">Tidak ada kategori yang ditemukan untuk pencarian "{{ request('search') }}"</td>
-                                </tr>
+                                @if(request('search'))
+                                    <tr>
+                                        <td colspan="3" class="text-center text-gray-500 py-4">Tidak ada kategori yang ditemukan untuk pencarian "{{ request('search') }}"</td>
+                                    </tr>
+                                @else
+                                    <tr>
+                                        <td colspan="3" class="text-center text-gray-500 py-4">Tidak ada data kategori</td>
+                                    </tr>
+                                @endif
                             @endforelse
                         </tbody>
                     </table>

@@ -23,6 +23,8 @@ use App\Http\Controllers\LangkahController;
 */
 Route::delete('/langkah/massdestroy', [LangkahController::class, 'massDestroy'])->name('langkah.massdestroy');
 Route::get('/search-resep', [ResepController::class, 'searchResep'])->name('search-resep');
+Route::get('/dashboard', [ResepController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,9 +38,9 @@ Route::resource('langkah', LangkahController::class);
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -2,13 +2,16 @@
     <!-- Primary Navigation Menu -->
     <div class="p-4">
         <div class="shrink-0 flex items-center">
-            <a href="{{ route('dashboard') }}">
-                <img src="{{ asset('logo/logo2r.png') }}" class=" fill-current text-gray-500" style="width: 80px; height:80px;"  alt="">
+            <a href="{{ route('dashboard') }}" class="ml-12"> <!-- Menambahkan margin kiri -->
+                <img src="{{ asset('logo/logo2r.png') }}" class="fill-current text-gray-500" style="width: 80px; height:80px;" alt="">
             </a>
         </div>
 
+        <!-- Garis pemisah -->
+        <hr class="my-4 border-t border-white">
+
         <!-- Navigation Links -->
-        <div class="mt-10 space-y-2">
+        <div class="mt-5 space-y-2">
             <a href="{{ route('dashboard') }}" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-white hover:text-[#FB773C] {{ request()->routeIs('dashboard') ? 'bg-[#e36b33]' : '' }}">
                 <i class="fas fa-tachometer-alt mr-2"></i> <!-- Ikon Dashboard -->
                 {{ __('Dashboard') }}
@@ -29,11 +32,11 @@
                 <i class="fas fa-user-friends mr-2"></i> <!-- Ikon Pembuat -->
                 {{ __('Pembuat') }}
             </a>
-            <a href="{{ route('langkah.index') }}" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-white hover:text-[#FB773C] {{ request()->routeIs('pembuat.index') ? 'bg-[#e36b33]' : '' }}">
-            <i class="fas fa-tasks mr-2"></i> <!-- Ikon Langkah -->
-            <!-- Ikon Pembuat -->
+            <a href="{{ route('langkah.index') }}" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-white hover:text-[#FB773C] {{ request()->routeIs('langkah.index') ? 'bg-[#e36b33]' : '' }}">
+                <i class="fas fa-tasks mr-2"></i> <!-- Ikon Langkah -->
                 {{ __('Langkah') }}
             </a>
+           
         </div>
     </div>
 </nav>
