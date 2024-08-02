@@ -1,25 +1,12 @@
 <x-app-layout>
     <div class="container mx-auto mt-8 px-4">
-        <div class="flex justify-between items-center m-auto my-5 max-w-4xl">
-            <!-- Input search with icon -->
-            <form method="GET" action="{{ route('bahan.index') }}" class="relative flex-1">
-                <input 
-                    type="text" 
-                    name="search" 
-                    value="{{ request('search') }}" 
-                    placeholder="Cari Bahan..." 
-                    class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                />
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-            </form>
+        <x-slot name="header">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Daftar Bahan') }}
+            </h2>
             
-            <!-- Dropdown profile -->
-            <x-profile-dropdown />
-        </div>
+        </x-slot>
         
-        <div class="flex justify-between items-center mb-6 max-w-4xl m-auto">
-            <h1 class="text-2xl font-bold">Daftar Bahan</h1>
-        </div>
 
         @if(session('error'))
             <div class="bg-red-500 text-white p-4 rounded mb-4 max-w-4xl mx-auto" role="alert">
@@ -48,11 +35,27 @@
                         });
                     </script>
                 @endif
-                <div class="flex justify-between items-center mb-6">
-                    <a href="{{ route('bahan.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center">
+                <div class="flex items-center justify-between mb-6">
+                    <!-- Search Form -->
+                    <div class="relative flex-1 max-w-md">
+                        <form method="GET" action="{{ route('bahan.index') }}" class="flex">
+                            <input 
+                                type="text" 
+                                name="search" 
+                                value="{{ request('search') }}" 
+                                placeholder="Cari Bahan..." 
+                                class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" 
+                            />
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+                        </form>
+                    </div>
+                    
+                    <!-- Add Button -->
+                    <a href="{{ route('bahan.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center ml-4">
                         <i class="bi bi-plus-circle mr-2"></i> Tambah Bahan
                     </a>
                 </div>
+                
                 <div class="overflow-x-auto">
                     <table class="w-full bg-white border border-gray-200 rounded-lg">
                         <thead class="bg-gray-200 text-gray-600">

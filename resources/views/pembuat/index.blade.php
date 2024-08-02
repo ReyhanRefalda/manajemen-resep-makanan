@@ -1,48 +1,48 @@
 <x-app-layout>
     <div class="container mx-auto mt-8 px-4">
-        <div class="flex justify-between items-center my-5">
-            <!-- Input search with icon -->
-            <div class="relative flex-1">
-                <form action="{{ route('pembuat.index') }}" method="GET" class="flex">
-                    <input type="text" name="search" placeholder="Cari Pembuat..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request()->get('search') }}" />
-                    <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </form>
-            </div>
+        <x-slot name="header">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Daftar Pembuat') }}
+            </h2>
             
-            <!-- Dropdown profile -->
-            <x-profile-dropdown />
-        </div>
-        <div class="flex justify-between items-center mb-6 max-w-4xl">
-            <h1 class="text-2xl font-bold">Daftar Pembuat</h1>
-        </div>
-
+        </x-slot>
         <!-- Alert untuk pencarian -->
-        @if (session('success'))
-            <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4">
-                {{ session('success') }}
-            </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    setTimeout(function () {
-                        const alert = document.getElementById('success-alert');
-                        if (alert) {
-                            alert.style.opacity = 0;
-                            setTimeout(function () {
-                                alert.style.display = 'none';
-                            }, 500); // 500ms to wait until the fade out is complete
-                        }
-                    }, 6000); // 6000ms = 6 seconds
-                });
-            </script>
-        @endif
+       
 
         <!-- Tabel Pembuat -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            @if (session('success'))
+                <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        setTimeout(function () {
+                            const alert = document.getElementById('success-alert');
+                            if (alert) {
+                                alert.style.opacity = 0;
+                                setTimeout(function () {
+                                    alert.style.display = 'none';
+                                }, 500); // 500ms to wait until the fade out is complete
+                            }
+                        }, 6000); // 6000ms = 6 seconds
+                    });
+                </script>
+            @endif
             <div class="p-4">
-                <div class="flex justify-start mb-4">
-                    <a href="{{ route('pembuat.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+                <div class="flex items-center justify-between mb-3">
+                    
+                    <div class="relative flex-1 max-w-md">
+                        <form action="{{ route('pembuat.index') }}" method="GET" class="flex">
+                            <input type="text" name="search" placeholder="Cari Pembuat..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" value="{{ request()->get('search') }}" />
+                            <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </form>
+                    </div>
+                
+                    <!-- Add Button -->
+                    <a href="{{ route('pembuat.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ml-4">
                         Tambah Pembuat
                     </a>
                 </div>

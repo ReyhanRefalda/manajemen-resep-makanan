@@ -1,31 +1,15 @@
 <x-app-layout>
     <div class="container mx-auto mt-8 px-4">
-        <div class="flex justify-between items-center my-5">
-            <!-- Input search with icon -->
-            <div class="relative flex-1">
-                <form action="{{ route('resep.index') }}" method="GET" class="flex">
-                    <input type="text" name="search" placeholder="Cari resep..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request()->get('search') }}" />
-                    <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Dropdown profile -->
-            <x-profile-dropdown />
-        </div>
-
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Daftar Resep</h1>
-            <a href="{{ route('resep.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center">
-                <i class="bi bi-plus-circle mr-2"></i> Tambah Resep
-            </a>
-        </div>
+        <x-slot name="header">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Daftar Resep') }}
+            </h2>
+            
+        </x-slot>
 
         <!-- Card with Table -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <div class="p-4">
-                @if(session('success'))
+            @if(session('success'))
                 <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4" role="alert">
                     {{ session('success') }}
                 </div>
@@ -43,6 +27,35 @@
                     });
                 </script>
                 @endif
+            <div class="p-4">
+                <div class="flex items-center justify-between mb-6">
+                    <!-- Search Form -->
+                    <div class="relative flex-1 max-w-md">
+                        <form action="{{ route('resep.index') }}" method="GET" class="flex">
+                            <input 
+                                type="text" 
+                                name="search" 
+                                placeholder="Cari resep..." 
+                                class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" 
+                                value="{{ request()->get('search') }}" 
+                            />
+                            <button 
+                                type="submit" 
+                                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                            >
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Add Button -->
+                    <a 
+                        href="{{ route('resep.create') }}" 
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center ml-4"
+                    >
+                        <i class="bi bi-plus-circle mr-2"></i> Tambah Resep
+                    </a>
+                </div>
 
                 <div class="overflow-x-auto">
                     <table class="w-full bg-white border border-gray-200 rounded-lg">

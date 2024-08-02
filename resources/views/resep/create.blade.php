@@ -137,7 +137,7 @@
                 let bahan = bahanList.find(b => b.id == id);
 
                 // Check if the field already exists
-                if (bahan && !jumlahContainer.find(`#jumlah-${bahan.id}`).length) {
+                if (bahan && !jumlahContainer.find(#jumlah-${bahan.id}).length) {
                     let existingValue = $('input[name="jumlah[' + id + ']"]').val() || '';
                     jumlahContainer.append(`
                         <div class="mb-2" id="jumlah-${bahan.id}">
@@ -181,7 +181,7 @@
             // Validate that each selected bahan has a jumlah filled in
             let valid = true;
             selectedBahan.forEach(function(id) {
-                let jumlahInput = $(`input[name="jumlah[${id}]"]`);
+                let jumlahInput = $(input[name="jumlah[${id}]"]);
                 if (!jumlahInput.val()) {
                     valid = false;
                     jumlahInput.addClass('border-red-500');
@@ -215,7 +215,7 @@
             const storedImageInput = localStorage.getItem('imageInput');
             if (storedImageInput) {
                 const fileInputContainer = document.createElement('div');
-                fileInputContainer.innerHTML = `<input type="file" name="image" id="image" class="form-input w-full border-gray-300 rounded-md shadow-sm" />`;
+                fileInputContainer.innerHTML = <input type="file" name="image" id="image" class="form-input w-full border-gray-300 rounded-md shadow-sm" />;
                 const newFileInput = fileInputContainer.firstChild;
                 newFileInput.addEventListener('change', imageInputEvent);
                 imageInput.parentNode.replaceChild(newFileInput, imageInput);
