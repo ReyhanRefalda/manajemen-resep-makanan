@@ -1,24 +1,11 @@
 <x-app-layout>
     <div class="container mx-auto mt-8 px-4">
-        <div class="flex justify-between items-center my-5 max-w-4xl m-auto">
-            <!-- Input search with icon -->
-            <div class="relative flex-1">
-                <form action="{{ route('kategori.index') }}" method="GET" class="flex">
-                    <input type="text" name="search" placeholder="Cari Kategori..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request()->get('search') }}" />
-                    <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Dropdown profile -->
-            <x-profile-dropdown />
-        </div>
-        <div class="flex justify-between items-center mb-6 max-w-4xl m-auto">
-            <h1 class="text-2xl font-bold">Daftar Kategori</h1>
-        </div>
-
-        <!-- Alert untuk pencarian -->
+        <x-slot name="header">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Daftar Kategori') }}
+            </h2>
+            
+        </x-slot>
        
         <!-- Card untuk Tabel -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
@@ -41,11 +28,23 @@
                         });
                     </script>
                 @endif
-                <div class="flex justify-start mb-6">
-                    <a href="{{ route('kategori.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center">
-                        <i class="bi bi-plus-circle mr-2"></i> Tambah Kategori
+                <div class="flex items-center justify-between mb-4">
+                    <!-- Search Form -->
+                    <div class="relative flex-1 max-w-md">
+                        <form action="{{ route('kategori.index') }}" method="GET" class="flex">
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kategori ..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" />
+                            <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </form>
+                    </div>
+                
+                    <!-- Add Button -->
+                    <a href="{{ route('kategori.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ml-4">
+                        Tambah Kategori
                     </a>
                 </div>
+                
                 <div class="overflow-x-auto">
                     <table class="w-full bg-white border border-gray-200 rounded-lg">
                         <thead class="bg-gray-200 text-gray-600">
