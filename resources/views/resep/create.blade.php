@@ -54,7 +54,7 @@
                             @if($bahan)
                                 <div class="mb-2" id="jumlah-{{ $bahan->id }}">
                                     <label for="jumlah[{{ $bahan->id }}]" class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk {{ $bahan->nama }}</label>
-                                    <input type="number" name="jumlah[{{ $bahan->id }}]" min="1" placeholder="Jumlah untuk {{ $bahan->nama }}" value="{{ old('jumlah.' . $bahan->id) }}" class="form-input w-full border-gray-300 rounded-md shadow-sm">
+                                    <input type="text" name="jumlah[{{ $bahan->id }}]" min="1" placeholder="Jumlah untuk {{ $bahan->nama }}" value="{{ old('jumlah.' . $bahan->id) }}" class="form-input w-full border-gray-300 rounded-md shadow-sm">
                                 </div>
                             @endif
                         @endforeach
@@ -142,7 +142,7 @@
                     jumlahContainer.append(`
                         <div class="mb-2" id="jumlah-${bahan.id}">
                             <label for="jumlah[${bahan.id}]" class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk ${bahan.nama}</label>
-                            <input type="number" name="jumlah[${bahan.id}]" min="1" placeholder="Jumlah untuk ${bahan.nama}" class="form-input w-full border-gray-300 rounded-md shadow-sm" value="${existingValue}">
+                            <input type="text" name="jumlah[${bahan.id}]" min="1" placeholder="Jumlah untuk ${bahan.nama}" class="form-input w-full border-gray-300 rounded-md shadow-sm" value="${existingValue}">
                         </div>
                     `);
                 }
