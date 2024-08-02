@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kategori;
+use App\Models\Resep; // Pastikan model Resep diimport
 use Illuminate\Http\Request;
 
 class KategoriController extends Controller
@@ -79,6 +80,11 @@ class KategoriController extends Controller
 
     public function destroy(Kategori $kategori)
     {
+        // Cek apakah kategori sedang digunakan di data resep
+        if (Resep::where('kategori_id', $kategori->id)->exists()) {
+            return redirect()->route('kategori.index')->with('error', 'Kategori tidak bisa dihapus karena sedang digunakan di data resep.');
+        }
+
         $kategori->delete();
 
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil dihapus.');

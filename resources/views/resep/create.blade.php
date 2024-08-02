@@ -54,7 +54,7 @@
                             @if($bahan)
                                 <div class="mb-2" id="jumlah-{{ $bahan->id }}">
                                     <label for="jumlah[{{ $bahan->id }}]" class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk {{ $bahan->nama }}</label>
-                                    <input type="number" name="jumlah[{{ $bahan->id }}]" min="1" placeholder="Jumlah untuk {{ $bahan->nama }}" value="{{ old('jumlah.' . $bahan->id) }}" class="form-input w-full border-gray-300 rounded-md shadow-sm">
+                                    <input type="text" name="jumlah[{{ $bahan->id }}]" min="1" placeholder="Jumlah untuk {{ $bahan->nama }}" value="{{ old('jumlah.' . $bahan->id) }}" class="form-input w-full border-gray-300 rounded-md shadow-sm">
                                 </div>
                             @endif
                         @endforeach
@@ -121,108 +121,109 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        $('#bahan').select2({
-            placeholder: "Pilih Bahan",
-            allowClear: true
+document.addEventListener('DOMContentLoaded', function () {
+    $('#bahan').select2({
+        placeholder: "Pilih Bahan",
+        allowClear: true
+    });
+
+    let bahanList = {!! json_encode($bahans->toArray()) !!};
+
+    // Function to populate jumlah fields
+    function populateJumlahFields(selectedBahan) {
+        let jumlahContainer = $('#jumlah-container');
+
+        selectedBahan.forEach(function(id) {
+            let bahan = bahanList.find(b => b.id == id);
+
+            // Check if the field already exists
+            if (bahan && !jumlahContainer.find(`#jumlah-${bahan.id}`).length) {
+                let existingValue = $(`input[name="jumlah[${id}]"]`).val() || '';
+                jumlahContainer.append(`
+                    <div class="mb-2" id="jumlah-${bahan.id}">
+                        <label for="jumlah[${bahan.id}]" class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk ${bahan.nama}</label>
+                        <input type="text" name="jumlah[${bahan.id}]" min="1" placeholder="Jumlah untuk ${bahan.nama}" class="form-input w-full border-gray-300 rounded-md shadow-sm" value="${existingValue}">
+                    </div>
+                `);
+            }
+        });
+    }
+
+    // On page load, populate fields if there are old values
+    populateJumlahFields($('#bahan').val());
+
+    // Event listener for changes in bahan selection
+    $('#bahan').on('change', function() {
+        let selectedBahan = $(this).val(); // Get selected bahan IDs
+        let jumlahContainer = $('#jumlah-container');
+
+        // Remove fields for bahan that are no longer selected
+        jumlahContainer.find('div[id^="jumlah-"]').each(function() {
+            let id = $(this).attr('id').replace('jumlah-', '');
+            if (!selectedBahan.includes(id)) {
+                $(this).remove();
+            }
         });
 
-        let bahanList = {!! json_encode($bahans->toArray()) !!};
+        // Populate fields for newly selected bahan
+        populateJumlahFields(selectedBahan);
+    });
 
-        // Function to populate jumlah fields
-        function populateJumlahFields(selectedBahan) {
-            let jumlahContainer = $('#jumlah-container');
-
-            selectedBahan.forEach(function(id) {
-                let bahan = bahanList.find(b => b.id == id);
-
-                // Check if the field already exists
-                if (bahan && !jumlahContainer.find(#jumlah-${bahan.id}).length) {
-                    let existingValue = $('input[name="jumlah[' + id + ']"]').val() || '';
-                    jumlahContainer.append(`
-                        <div class="mb-2" id="jumlah-${bahan.id}">
-                            <label for="jumlah[${bahan.id}]" class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk ${bahan.nama}</label>
-                            <input type="number" name="jumlah[${bahan.id}]" min="1" placeholder="Jumlah untuk ${bahan.nama}" class="form-input w-full border-gray-300 rounded-md shadow-sm" value="${existingValue}">
-                        </div>
-                    `);
-                }
-            });
+    // Form submission validation
+    $('#resepForm').on('submit', function(e) {
+        let selectedBahan = $('#bahan').val();
+        if (!selectedBahan || selectedBahan.length === 0) {
+            e.preventDefault();
+            alert('Pilih setidaknya satu bahan.');
+            return;
         }
 
-        // On page load, populate fields if there are old values
-        populateJumlahFields($('#bahan').val());
-
-        // Event listener for changes in bahan selection
-        $('#bahan').on('change', function() {
-            let selectedBahan = $(this).val(); // Get selected bahan IDs
-            let jumlahContainer = $('#jumlah-container');
-
-            // Remove fields for bahan that are no longer selected
-            jumlahContainer.find('div[id^="jumlah-"]').each(function() {
-                let id = $(this).attr('id').replace('jumlah-', '');
-                if (!selectedBahan.includes(id)) {
-                    $(this).remove();
-                }
-            });
-
-            // Populate fields for newly selected bahan
-            populateJumlahFields(selectedBahan);
-        });
-
-        // Form submission validation
-        $('#resepForm').on('submit', function(e) {
-            let selectedBahan = $('#bahan').val();
-            if (!selectedBahan || selectedBahan.length === 0) {
-                e.preventDefault();
-                alert('Pilih setidaknya satu bahan.');
-                return;
-            }
-
-            // Validate that each selected bahan has a jumlah filled in
-            let valid = true;
-            selectedBahan.forEach(function(id) {
-                let jumlahInput = $(input[name="jumlah[${id}]"]);
-                if (!jumlahInput.val()) {
-                    valid = false;
-                    jumlahInput.addClass('border-red-500');
-                } else {
-                    jumlahInput.removeClass('border-red-500');
-                }
-            });
-
-            if (!valid) {
-                e.preventDefault();
-                alert('Jumlah untuk setiap bahan yang dipilih harus diisi.');
+        // Validate that each selected bahan has a jumlah filled in
+        let valid = true;
+        selectedBahan.forEach(function(id) {
+            let jumlahInput = $(`input[name="jumlah[${id}]"]`);
+            if (!jumlahInput.val()) {
+                valid = false;
+                jumlahInput.addClass('border-red-500');
+            } else {
+                jumlahInput.removeClass('border-red-500');
             }
         });
 
-        // Restore the image input field value after form validation fails
-        const imageInput = document.querySelector('input[name="image"]');
-        if (imageInput) {
-            // Save the file input to localStorage on change
-            imageInput.addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        localStorage.setItem('imageInput', e.target.result);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // Restore the file input from localStorage
-            const storedImageInput = localStorage.getItem('imageInput');
-            if (storedImageInput) {
-                const fileInputContainer = document.createElement('div');
-                fileInputContainer.innerHTML = <input type="file" name="image" id="image" class="form-input w-full border-gray-300 rounded-md shadow-sm" />;
-                const newFileInput = fileInputContainer.firstChild;
-                newFileInput.addEventListener('change', imageInputEvent);
-                imageInput.parentNode.replaceChild(newFileInput, imageInput);
-                localStorage.removeItem('imageInput');
-            }
+        if (!valid) {
+            e.preventDefault();
+            alert('Jumlah untuk setiap bahan yang dipilih harus diisi.');
         }
     });
-    </script>
+
+    // Restore the image input field value after form validation fails
+    const imageInput = document.querySelector('input[name="image"]');
+    if (imageInput) {
+        // Save the file input to localStorage on change
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('imageInput', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Restore the file input from localStorage
+        const storedImageInput = localStorage.getItem('imageInput');
+        if (storedImageInput) {
+            const fileInputContainer = document.createElement('div');
+            fileInputContainer.innerHTML = `<input type="file" name="image" id="image" class="form-input w-full border-gray-300 rounded-md shadow-sm" />`;
+            const newFileInput = fileInputContainer.firstChild;
+            newFileInput.addEventListener('change', imageInputEvent);
+            imageInput.parentNode.replaceChild(newFileInput, imageInput);
+            localStorage.removeItem('imageInput');
+        }
+    }
+});
+</script>
+
 
 </x-app-layout>

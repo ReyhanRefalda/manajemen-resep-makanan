@@ -10,17 +10,15 @@ class BahanController extends Controller
     public function index(Request $request)
     {
         $query = Bahan::query();
-    
+
         if ($request->has('search')) {
             $query->where('nama', 'like', '%' . $request->search . '%');
         }
-    
+
         $bahans = $query->get();
-    
+
         return view('bahan.index', compact('bahans'))->with('searchQuery', $request->search);
     }
-    
-
 
     public function create()
     {
@@ -74,7 +72,7 @@ class BahanController extends Controller
             'nama.string' => 'Nama bahan harus berupa huruf',
             'nama.max' => 'Nama bahan tidak boleh lebih dari 255 karakter',
         ]);
-        
+
         $bahan->update($request->all());
 
         return redirect()->route('bahan.index')->with('success', 'Bahan berhasil diperbarui.');
@@ -82,6 +80,7 @@ class BahanController extends Controller
 
     public function destroy(Bahan $bahan)
     {
+        // Lakukan soft delete
         $bahan->delete();
 
         return redirect()->route('bahan.index')->with('success', 'Bahan berhasil dihapus.');

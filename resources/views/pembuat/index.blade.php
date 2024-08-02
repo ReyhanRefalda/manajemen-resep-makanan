@@ -4,10 +4,9 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Daftar Pembuat') }}
             </h2>
-            
         </x-slot>
+
         <!-- Alert untuk pencarian -->
-       
 
         <!-- Tabel Pembuat -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -29,9 +28,28 @@
                     });
                 </script>
             @endif
+
+            @if (session('error'))
+                <div id="error-alert" class="bg-red-500 text-white p-4 rounded mb-4">
+                    {{ session('error') }}
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        setTimeout(function () {
+                            const alert = document.getElementById('error-alert');
+                            if (alert) {
+                                alert.style.opacity = 0;
+                                setTimeout(function () {
+                                    alert.style.display = 'none';
+                                }, 500); // 500ms to wait until the fade out is complete
+                            }
+                        }, 6000); // 6000ms = 6 seconds
+                    });
+                </script>
+            @endif
+
             <div class="p-4">
                 <div class="flex items-center justify-between mb-3">
-                    
                     <div class="relative flex-1 max-w-md">
                         <form action="{{ route('pembuat.index') }}" method="GET" class="flex">
                             <input type="text" name="search" placeholder="Cari Pembuat..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" value="{{ request()->get('search') }}" />

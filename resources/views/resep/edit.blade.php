@@ -84,7 +84,7 @@
                     @foreach($resep->bahans as $bahan)
                         <div class="mb-2 jumlah-bahan" data-bahan-id="{{ $bahan->id }}">
                             <label class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk {{ $bahan->nama }}</label>
-                            <input type="number" name="jumlah[{{ $bahan->id }}]" min="1" placeholder="Jumlah untuk {{ $bahan->nama }}" class="form-input w-full border-gray-300 rounded-md shadow-sm mb-2" value="{{ $bahan->pivot->jumlah }}">
+                            <input type="text" name="jumlah[{{ $bahan->id }}]" min="1" placeholder="Jumlah untuk {{ $bahan->nama }}" class="form-input w-full border-gray-300 rounded-md shadow-sm mb-2" value="{{ $bahan->pivot->jumlah }}">
                         </div>
                     @endforeach
                 </div>
@@ -137,7 +137,7 @@
                         $('#jumlahBahanContainer').append(`
                             <div class="mb-2 jumlah-bahan" data-bahan-id="${bahanId}">
                                 <label class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk ${bahanName}</label>
-                                <input type="number" name="jumlah[${bahanId}]" min="1" placeholder="Jumlah untuk ${bahanName}" class="form-input w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="jumlah[${bahanId}]" min="1" placeholder="Jumlah untuk ${bahanName}" class="form-input w-full border-gray-300 rounded-md shadow-sm mb-2">
                             </div>
                         `);
                     }

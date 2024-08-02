@@ -38,7 +38,7 @@ class Resep extends Model
     // Relasi dengan Bahan (banyak ke banyak)
     public function bahans()
     {
-        return $this->belongsToMany(Bahan::class, 'resep_bahan')->withPivot('jumlah');
+        return $this->belongsToMany(Bahan::class, 'resep_bahan')->withPivot('jumlah')->withTrashed();
     }
 
     // Relasi dengan Langkah (misalnya banyak ke banyak, pastikan sesuai dengan struktur tabel)

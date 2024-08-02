@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pembuat;
+use App\Models\Resep;
 use Illuminate\Http\Request;
 
 class PembuatController extends Controller
@@ -75,6 +76,12 @@ class PembuatController extends Controller
     public function destroy($id)
     {
         $pembuat = Pembuat::findOrFail($id);
+
+        // Cek apakah pembuat sedang digunakan di data resep
+        if ($pembuat->reseps()->exists()) {
+            return redirect()->route('pembuat.index')->with('error', 'Pembuat tidak bisa dihapus, karena sedang digunakan di data resep.');
+        }
+
         $pembuat->delete();
 
         return redirect()->route('pembuat.index')->with('success', 'Pembuat berhasil dihapus.');
