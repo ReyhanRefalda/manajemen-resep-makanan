@@ -1,21 +1,10 @@
 <x-app-layout>
     <div class="container mx-auto mt-8 px-4">
-        <div class="flex justify-between items-center my-5 max-w-4xl m-auto">
-            <!-- Input search with icon -->
-            <div class="relative flex-1">
-                <form action="{{ route('langkah.index') }}" method="GET">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Langkah ..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-                </form>
-            </div>
-            
-            <!-- Dropdown profile -->
-            <x-profile-dropdown />
-        </div>
-
-        <div class="flex justify-between items-center mb-6 max-w-4xl m-auto">
-            <h1 class="text-2xl font-bold">Daftar Langkah-Langkah</h1>
-        </div>
+        <x-slot name="header">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Daftar Langkah-Langkah') }}
+            </h2>
+        </x-slot>
 
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto p-6">
             @if(session('success'))
@@ -37,13 +26,23 @@
                 </script>
             @endif
             
-            <div class="flex justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-800">Langkah-langkah Resep</h3>
-                <a href="{{ route('langkah.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <!-- Search Form -->
+                <div class="relative flex-1 max-w-md">
+                    <form action="{{ route('langkah.index') }}" method="GET" class="flex">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Langkah ..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" />
+                        <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </form>
+                </div>
+            
+                <!-- Add Button -->
+                <a href="{{ route('langkah.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ml-4">
                     Tambah Langkah
                 </a>
             </div>
-
+            
             @if($resep->isEmpty())
                 <p class="text-gray-500">
                     @if(request('search'))
@@ -57,7 +56,7 @@
                     @csrf
                     @method('DELETE')
                     <table class="min-w-full bg-white divide-y divide-gray-200">
-                        <thead>
+                        <thead class="bg-gray-200 text-gray-600">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     <input type="checkbox" id="select-all" class="form-checkbox">
@@ -71,7 +70,7 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach ($resep as $index => $res)
                                 @foreach ($res->langkah as $step)
-                                    <tr>
+                                    <tr class="hover:bg-gray-50 transition duration-300">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             <input type="checkbox" name="ids[]" value="{{ $step->id }}" class="form-checkbox">
                                         </td>

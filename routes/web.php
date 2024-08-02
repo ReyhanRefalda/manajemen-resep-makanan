@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ResepController;
 use App\Http\Controllers\BahanController;
-use App\Http\Controllers\KategoriController;
-use App\Http\Controllers\PembuatController;
+use App\Http\Controllers\ResepController;
 use App\Http\Controllers\LangkahController;
+use App\Http\Controllers\PembuatController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\DashboardController;
 
 
 
@@ -24,10 +25,11 @@ use App\Http\Controllers\LangkahController;
 Route::delete('/langkah/massdestroy', [LangkahController::class, 'massDestroy'])->name('langkah.massdestroy');
 Route::get('/search-resep', [ResepController::class, 'searchResep'])->name('search-resep');
 Route::get('/dashboard', [ResepController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 Route::resource('resep', ResepController::class);
 Route::resource('bahan', BahanController::class);
