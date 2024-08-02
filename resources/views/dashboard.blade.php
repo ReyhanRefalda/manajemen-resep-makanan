@@ -8,7 +8,7 @@
         
         <div class="flex justify-center m-6">
             <form action="{{ route('dashboard') }}" method="GET" class="relative w-full max-w-md">
-                <input type="text" name="search" placeholder="Cari Resep..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" value="{{ request()->get('search') }}" />
+                <input type="text" name="search" placeholder="Cari Resep atau Bahan..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" value="{{ request()->get('search') }}" />
                 <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>

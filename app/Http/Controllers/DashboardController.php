@@ -11,13 +11,16 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $reseps = Resep::with('kategori', 'pembuat')
+
+        $reseps = Resep::with('kategori', 'pembuat', 'bahans') // Pastikan nama relasinya sesuai
             ->when($search, function ($query, $search) {
-                return $query->where('nama', 'like', '%' . $search . '%');
+                return $query->where('nama', 'like', '%' . $search . '%')
+                             ->orWhereHas('bahans', function($query) use ($search) {
+                                 $query->where('nama', 'like', '%' . $search . '%');
+                             });
             })
             ->get();
-
+        
         return view('dashboard', compact('reseps'));
     }
 }
-

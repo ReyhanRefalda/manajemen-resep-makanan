@@ -109,79 +109,92 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        $('#bahan').select2({
-            placeholder: "Pilih Bahan",
-            allowClear: true
-        });
-
-        let bahanList = {!! json_encode($bahans->toArray()) !!};
-
-        function populateJumlahFields(selectedBahan) {
-            let jumlahContainer = $('#jumlah-container');
-            jumlahContainer.empty(); // Clear existing fields
-
-            selectedBahan.forEach(function(id) {
-                let bahan = bahanList.find(b => b.id == id);
-                if (bahan) {
-                    let existingValue = $(`input[name="jumlah[${id}]"]`).val() || '';
-                    jumlahContainer.append(`
-                        <div class="mb-2" id="jumlah-${bahan.id}">
-                            <label for="jumlah[${bahan.id}]" class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk ${bahan.nama}</label>
-                            <input type="text" name="jumlah[${bahan.id}]" min="1" placeholder="Jumlah untuk ${bahan.nama}" class="form-input w-full border-gray-300 rounded-md shadow-sm" value="${existingValue}">
-                        </div>
-                    `);
-                }
+        document.addEventListener('DOMContentLoaded', function () {
+            $('#bahan').select2({
+                placeholder: "Pilih Bahan",
+                allowClear: true
             });
-        }
-
-        let selectedBahan = $('#bahan').val() || [];
-        populateJumlahFields(selectedBahan);
-
-        $('#bahan').on('change', function() {
-            let selectedBahan = $(this).val();
-            populateJumlahFields(selectedBahan);
-        });
-
-        $('#resepForm').on('submit', function(e) {
-            let selectedBahan = $('#bahan').val();
-            if (!selectedBahan || selectedBahan.length === 0) {
-                e.preventDefault();
-                alert('Pilih setidaknya satu bahan.');
-                return;
+        
+            let bahanList = {!! json_encode($bahans->toArray()) !!};
+            let jumlahValues = {}; // Objek untuk menyimpan nilai jumlah bahan
+        
+            function populateJumlahFields(selectedBahan) {
+                let jumlahContainer = $('#jumlah-container');
+                jumlahContainer.empty(); // Clear existing fields
+        
+                selectedBahan.forEach(function(id) {
+                    let bahan = bahanList.find(b => b.id == id);
+                    if (bahan) {
+                        let existingValue = jumlahValues[id] || ''; // Ambil nilai dari objek jika ada
+                        jumlahContainer.append(`
+                            <div class="mb-2" id="jumlah-${bahan.id}">
+                                <label for="jumlah[${bahan.id}]" class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk ${bahan.nama}</label>
+                                <input type="text" name="jumlah[${bahan.id}]" min="1" placeholder="Jumlah untuk ${bahan.nama}" class="form-input w-full border-gray-300 rounded-md shadow-sm" value="${existingValue}">
+                            </div>
+                        `);
+                    }
+                });
             }
-
-            let valid = true;
-            selectedBahan.forEach(function(id) {
-                let jumlahInput = $(`input[name="jumlah[${id}]"]`);
-                if (!jumlahInput.val()) {
-                    valid = false;
-                    jumlahInput.addClass('border-red-500');
-                } else {
-                    jumlahInput.removeClass('border-red-500');
+        
+            // Ambil nilai dari input jika ada
+            $('#bahan').on('change', function() {
+                let selectedBahan = $(this).val() || [];
+                
+                // Simpan nilai jumlah bahan saat ini
+                $('#jumlah-container input').each(function() {
+                    let name = $(this).attr('name');
+                    let value = $(this).val();
+                    let id = name.match(/\d+/)[0]; // Ambil ID dari nama input
+                    jumlahValues[id] = value;
+                });
+        
+                populateJumlahFields(selectedBahan);
+            });
+        
+            // Inisialisasi nilai jumlah bahan saat halaman dimuat
+            let initialBahan = $('#bahan').val() || [];
+            populateJumlahFields(initialBahan);
+        
+            $('#resepForm').on('submit', function(e) {
+                let selectedBahan = $('#bahan').val();
+                if (!selectedBahan || selectedBahan.length === 0) {
+                    e.preventDefault();
+                    alert('Pilih setidaknya satu bahan.');
+                    return;
+                }
+        
+                let valid = true;
+                selectedBahan.forEach(function(id) {
+                    let jumlahInput = $(`input[name="jumlah[${id}]"]`);
+                    if (!jumlahInput.val()) {
+                        valid = false;
+                        jumlahInput.addClass('border-red-500');
+                    } else {
+                        jumlahInput.removeClass('border-red-500');
+                    }
+                });
+        
+                if (!valid) {
+                    e.preventDefault();
+                    alert('Jumlah untuk setiap bahan yang dipilih harus diisi.');
                 }
             });
-
-            if (!valid) {
-                e.preventDefault();
-                alert('Jumlah untuk setiap bahan yang dipilih harus diisi.');
+        
+            // Restore the image input field value after form validation fails
+            const imageInput = document.querySelector('input[name="image"]');
+            if (imageInput) {
+                imageInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            // Display the selected image
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
             }
         });
-
-        // Restore the image input field value after form validation fails
-        const imageInput = document.querySelector('input[name="image"]');
-        if (imageInput) {
-            imageInput.addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        // Display the selected image
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-    });
-    </script>
+        </script>
+        
 </x-app-layout>

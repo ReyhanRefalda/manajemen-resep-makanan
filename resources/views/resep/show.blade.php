@@ -16,7 +16,7 @@
         <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
             <div class="p-6">
                 <p class="text-gray-700 mb-2"><strong>Pembuat:</strong> {{ $resep->pembuat->nama }}</p>
-                <p class="text-gray-600 mb-4">{{ $resep->deskripsi }}</p>
+                <p class="text-gray-600 "><strong>Deskripsi:</strong> {{ $resep->deskripsi }}</p>
                 <p class="text-gray-700"><strong>Kategori:</strong> {{ $resep->kategori->nama }}</p>
                 <p class="text-gray-700"><strong>Waktu Persiapan:</strong> {{ $resep->waktu_persiapan }}</p>
                 <p class="text-gray-700"><strong>Waktu Memasak:</strong> {{ $resep->waktu_memasak }}</p>
