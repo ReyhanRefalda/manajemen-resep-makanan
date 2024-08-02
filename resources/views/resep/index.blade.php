@@ -9,7 +9,9 @@
 
         <!-- Card with Table -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            @if(session('success'))
+            
+            <div class="p-4">
+                @if(session('success'))
                 <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4" role="alert">
                     {{ session('success') }}
                 </div>
@@ -27,7 +29,6 @@
                     });
                 </script>
                 @endif
-            <div class="p-4">
                 <div class="flex items-center justify-between mb-6">
                     <!-- Search Form -->
                     <div class="relative flex-1 max-w-md">
@@ -65,8 +66,6 @@
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Gambar</th>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Nama Resep</th>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Pembuat</th>
-                                <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Waktu Persiapan</th>
-                                <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Waktu Memasak</th>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Kategori</th>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Deskripsi</th>
                                 <th class="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Bahan</th> <!-- Kolom baru -->
@@ -86,8 +85,6 @@
                                 </td>
                                 <td class="px-4 py-3 text-center text-sm">{{ $item->nama }}</td>
                                 <td class="px-4 py-3 text-center text-sm">{{ $item->pembuat->nama }}</td>
-                                <td class="px-4 py-3 text-center text-sm">{{ $item->waktu_persiapan }}</td>
-                                <td class="px-4 py-3 text-center text-sm">{{ $item->waktu_memasak }}</td>
                                 <td class="px-4 py-3 text-center text-sm">{{ $item->kategori->nama }}</td>
                                 <td class="px-4 py-3 text-center text-sm">{{ Str::limit($item->deskripsi, 20) }}</td>
                                 <td class="px-4 py-3 text-center text-sm">
