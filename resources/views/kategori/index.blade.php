@@ -7,46 +7,48 @@
         </x-slot>
 
         <!-- Alert untuk pesan sukses dan error -->
-        @if (session('success'))
-            <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4">
-                {{ session('success') }}
-            </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    setTimeout(function () {
-                        const alert = document.getElementById('success-alert');
-                        if (alert) {
-                            alert.style.opacity = 0;
-                            setTimeout(function () {
-                                alert.style.display = 'none';
-                            }, 500); // 500ms to wait until the fade out is complete
-                        }
-                    }, 6000); // 6000ms = 6 seconds
-                });
-            </script>
-        @endif
+        
 
-        @if (session('error'))
-            <div id="error-alert" class="bg-red-500 text-white p-4 rounded mb-4">
-                {{ session('error') }}
-            </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    setTimeout(function () {
-                        const alert = document.getElementById('error-alert');
-                        if (alert) {
-                            alert.style.opacity = 0;
-                            setTimeout(function () {
-                                alert.style.display = 'none';
-                            }, 500); // 500ms to wait until the fade out is complete
-                        }
-                    }, 6000); // 6000ms = 6 seconds
-                });
-            </script>
-        @endif
+       
 
         <!-- Tabel Kategori -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            @if (session('error'))
+                <div id="error-alert" class="bg-red-500 text-white p-4 rounded mb-4">
+                    {{ session('error') }}
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        setTimeout(function () {
+                            const alert = document.getElementById('error-alert');
+                            if (alert) {
+                                alert.style.opacity = 0;
+                                setTimeout(function () {
+                                    alert.style.display = 'none';
+                                }, 500); // 500ms to wait until the fade out is complete
+                            }
+                        }, 6000); // 6000ms = 6 seconds
+                    });
+                </script>
+            @endif
+            @if (session('success'))
+                <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        setTimeout(function () {
+                            const alert = document.getElementById('success-alert');
+                            if (alert) {
+                                alert.style.opacity = 0;
+                                setTimeout(function () {
+                                    alert.style.display = 'none';
+                                }, 500); // 500ms to wait until the fade out is complete
+                            }
+                        }, 6000); // 6000ms = 6 seconds
+                    });
+                </script>
+            @endif
             <div class="p-4">
                 <div class="flex items-center justify-between mb-3">
                     <div class="relative flex-1 max-w-md">
