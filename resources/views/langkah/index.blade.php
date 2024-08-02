@@ -77,7 +77,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loop->iteration }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $res->nama }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $step->nomor }}. {{ $step->deskripsi }}
+                                            {{ $step->nomor }}. {{ Str::limit($step->deskripsi,50) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="{{ route('langkah.edit', $step->id) }}" class="text-green-600 hover:text-green-900 ml-4">Edit</a>
