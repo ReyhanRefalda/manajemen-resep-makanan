@@ -48,9 +48,8 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <a href="{{ route('logout') }}"
-                  class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-white hover:text-[#FB773C] {{ request()->routeIs('logout') }}? 'bg-[#e36b33]' : '' }}"
-                   onclick="event.preventDefault();
-                                this.closest('form').submit();">
+                    class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-white hover:text-[#FB773C] {{ request()->routeIs('logout') ? 'bg-[#e36b33]' : '' }}"
+                    onclick="event.preventDefault(); if (confirm('Yakin ingin log out?')) { this.closest('form').submit(); }">
                     <i class="fa-solid fa-right-from-bracket mr-2"></i>
                     {{ __('Log Out') }}
                 </a>
