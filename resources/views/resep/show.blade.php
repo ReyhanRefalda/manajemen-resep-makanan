@@ -9,7 +9,7 @@
     <h3>Bahan-bahan</h3>
     <ul>
         @forelse($resep->bahans as $bahan) <!-- Ubah 'bahan' menjadi 'bahans' -->
-        <li>{{ $bahan->nama }} - {{ $bahan->pivot->jumlah }}</li>
+        <li>{{ $bahan->nama }} : {{ $bahan->pivot->jumlah }}</li>
         @empty
         <li>Tidak ada bahan.</li>
         @endforelse

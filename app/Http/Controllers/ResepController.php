@@ -8,6 +8,7 @@ use App\Models\Kategori;
 use App\Models\Pembuat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ResepController extends Controller
 {
@@ -40,8 +41,8 @@ class ResepController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'nama' => 'required|string|max:255|unique:resep,nama,NULL,id,pembuat_id,' . $request->pembuat_id,
+            'deskripsi' => 'required|string',
             'waktu_persiapan' => 'nullable|string',
             'waktu_memasak' => 'nullable|string',
             'pembuat_id' => 'required|exists:pembuat,id',
@@ -71,11 +72,11 @@ class ResepController extends Controller
         return redirect()->route('resep.index')->with('success', 'Resep berhasil dibuat.');
     }
 
+
     public function show(Resep $resep)
     {
         return view('resep.show', compact('resep'));
     }
-
     public function edit(Resep $resep)
     {
         $kategoris = Kategori::all();
@@ -85,11 +86,12 @@ class ResepController extends Controller
         return view('resep.edit', compact('resep', 'kategoris', 'pembuat', 'bahans'));
     }
 
+
     public function update(Request $request, Resep $resep)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'nama' => 'required|string|max:255|unique:resep,nama,' . $resep->id . ',id,pembuat_id,' . $request->pembuat_id,
+            'deskripsi' => 'required|string',  // Ubah ini menjadi required
             'waktu_persiapan' => 'nullable|string',
             'waktu_memasak' => 'nullable|string',
             'kategori_id' => 'required|exists:kategori,id',
@@ -98,7 +100,7 @@ class ResepController extends Controller
             'bahan.*' => 'exists:bahan,id',
             'jumlah.*' => 'numeric|min:1',
         ]);
-
+    
         if ($request->hasFile('image')) {
             if ($resep->image) {
                 Storage::delete('public/' . $resep->image);
@@ -106,20 +108,22 @@ class ResepController extends Controller
             $imagePath = $request->file('image')->store('images', 'public');
             $validatedData['image'] = $imagePath;
         }
-
+    
         $resep->update($validatedData);
-
+    
         // Update many-to-many relation for bahan
         $bahanIds = $request->input('bahan', []);
         $jumlah = $request->input('jumlah', []);
-
+    
         $resep->bahans()->sync([]);
         foreach ($bahanIds as $bahanId) {
             $resep->bahans()->attach($bahanId, ['jumlah' => $jumlah[$bahanId] ?? 1]);
         }
-
+    
         return redirect()->route('resep.index')->with('success', 'Resep berhasil diperbarui.');
     }
+    
+
 
     public function destroy(Resep $resep)
     {

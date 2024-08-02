@@ -80,14 +80,13 @@
                     @enderror
                 </div>
 
-                <div class="mb-4">
-                    <label for="jumlah" class="block text-gray-700 text-sm font-medium mb-1">Jumlah Bahan</label>
-                    @foreach($bahans as $bahan)
-                        <input type="number" name="jumlah[{{ $bahan->id }}]" min="1" placeholder="Jumlah untuk {{ $bahan->nama }}" class="form-input w-full border-gray-300 rounded-md shadow-sm mb-2" value="{{ $resep->bahans->find($bahan->id)?->pivot->jumlah ?? '' }}">
+                <div class="mb-4" id="jumlahBahanContainer">
+                    @foreach($resep->bahans as $bahan)
+                        <div class="mb-2 jumlah-bahan" data-bahan-id="{{ $bahan->id }}">
+                            <label class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk {{ $bahan->nama }}</label>
+                            <input type="number" name="jumlah[{{ $bahan->id }}]" min="1" placeholder="Jumlah untuk {{ $bahan->nama }}" class="form-input w-full border-gray-300 rounded-md shadow-sm mb-2" value="{{ $bahan->pivot->jumlah }}">
+                        </div>
                     @endforeach
-                    @error('jumlah')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div class="mb-4">
@@ -116,7 +115,36 @@
             $('#bahan').select2({
                 placeholder: "Pilih Bahan",
                 allowClear: true
+            }).on('change', function () {
+                updateJumlahBahan();
             });
+
+            function updateJumlahBahan() {
+                var selectedBahans = $('#bahan').val();
+                $('.jumlah-bahan').each(function () {
+                    var bahanId = $(this).data('bahan-id');
+                    if (selectedBahans.includes(bahanId.toString())) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                // Add fields for newly selected bahan
+                selectedBahans.forEach(function(bahanId) {
+                    if (!$(`.jumlah-bahan[data-bahan-id="${bahanId}"]`).length) {
+                        let bahanName = $('#bahan option[value="'+bahanId+'"]').text();
+                        $('#jumlahBahanContainer').append(`
+                            <div class="mb-2 jumlah-bahan" data-bahan-id="${bahanId}">
+                                <label class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk ${bahanName}</label>
+                                <input type="number" name="jumlah[${bahanId}]" min="1" placeholder="Jumlah untuk ${bahanName}" class="form-input w-full border-gray-300 rounded-md shadow-sm mb-2">
+                            </div>
+                        `);
+                    }
+                });
+            }
+
+            updateJumlahBahan(); // Initial call to set the correct visibility
         });
     </script>
 </x-app-layout>
