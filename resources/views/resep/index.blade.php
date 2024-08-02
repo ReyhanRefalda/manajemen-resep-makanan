@@ -9,7 +9,9 @@
 
         <!-- Card with Table -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            @if(session('success'))
+            
+            <div class="p-4">
+                @if(session('success'))
                 <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4" role="alert">
                     {{ session('success') }}
                 </div>
@@ -27,7 +29,6 @@
                     });
                 </script>
                 @endif
-            <div class="p-4">
                 <div class="flex items-center justify-between mb-6">
                     <!-- Search Form -->
                     <div class="relative flex-1 max-w-md">

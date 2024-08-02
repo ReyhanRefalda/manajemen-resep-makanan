@@ -121,11 +121,34 @@
     </div>
 
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    $('#bahan').select2({
-        placeholder: "Pilih Bahan",
-        allowClear: true
-    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#bahan').select2({
+            placeholder: "Pilih Bahan",
+            allowClear: true
+        });
+
+        let bahanList = {!! json_encode($bahans->toArray()) !!};
+
+        // Function to populate jumlah fields
+        function populateJumlahFields(selectedBahan) {
+            let jumlahContainer = $('#jumlah-container');
+
+            selectedBahan.forEach(function(id) {
+                let bahan = bahanList.find(b => b.id == id);
+
+                // Check if the field already exists
+                if (bahan && !jumlahContainer.find(#jumlah-${bahan.id}).length) {
+                    let existingValue = $('input[name="jumlah[' + id + ']"]').val() || '';
+                    jumlahContainer.append(`
+                        <div class="mb-2" id="jumlah-${bahan.id}">
+                            <label for="jumlah[${bahan.id}]" class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk ${bahan.nama}</label>
+                            <input type="text" name="jumlah[${bahan.id}]" min="1" placeholder="Jumlah untuk ${bahan.nama}" class="form-input w-full border-gray-300 rounded-md shadow-sm" value="${existingValue}">
+                        </div>
+                    `);
+                }
+            });
+        }
 
     let bahanList = {!! json_encode($bahans->toArray()) !!};
 
