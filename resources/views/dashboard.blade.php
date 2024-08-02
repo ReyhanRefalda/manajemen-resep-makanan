@@ -1,8 +1,8 @@
 <x-app-layout>
     <div class="container mx-auto">
         <x-slot name="header">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Dashboard') }}
+            <h2 class="font-semibold text-center text-xl text-gray-800 leading-tight">
+                {{ __('Resep Nusantara') }}
             </h2>
         </x-slot>
         
@@ -42,9 +42,10 @@
                 </div>
             </div>
             @empty
-            <p>Tidak ada resep tersedia.</p>
+            <div class="flex items-center justify-center w-full col-span-full mt-6">
+                <p class="text-gray-600 text-lg">Tidak ada resep tersedia.</p>
+            </div>
             @endforelse
         </div>
-        
     </div>
 </x-app-layout>

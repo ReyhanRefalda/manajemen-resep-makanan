@@ -18,8 +18,8 @@
                 <p class="text-gray-700 mb-2"><strong>Pembuat:</strong> {{ $resep->pembuat->nama }}</p>
                 <p class="text-gray-600 mb-4">{{ $resep->deskripsi }}</p>
                 <p class="text-gray-700"><strong>Kategori:</strong> {{ $resep->kategori->nama }}</p>
-                <p class="text-gray-700"><strong>waktu_persiapan:</strong> {{ $resep->waktu_persiapan }}</p>
-                <p class="text-gray-700"><strong>waktu_memasak:</strong> {{ $resep->waktu_memasak }}</p>
+                <p class="text-gray-700"><strong>Waktu Persiapan:</strong> {{ $resep->waktu_persiapan }}</p>
+                <p class="text-gray-700"><strong>Waktu Memasak:</strong> {{ $resep->waktu_memasak }}</p>
             </div>
         </div>
 
