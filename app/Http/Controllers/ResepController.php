@@ -49,28 +49,29 @@ class ResepController extends Controller
             'kategori_id' => 'required|exists:kategori,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'bahan.*' => 'exists:bahan,id',
-            'jumlah.*' => 'numeric|min:1',
+            'jumlah.*' => 'nullable|string', // Update validation rule to nullable string
         ]);
-
+    
         $resep = Resep::create($validatedData);
-
+    
         // Handle image upload if exists
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('images', 'public');
             $resep->image = $imagePath;
             $resep->save();
         }
-
+    
         // Handle many-to-many relation for bahan
         $bahanIds = $request->input('bahan', []);
         $jumlah = $request->input('jumlah', []);
-
+    
         foreach ($bahanIds as $bahanId) {
-            $resep->bahans()->attach($bahanId, ['jumlah' => $jumlah[$bahanId] ?? 1]);
+            $resep->bahans()->attach($bahanId, ['jumlah' => $jumlah[$bahanId] ?? '']); // Save jumlah as string
         }
-
+    
         return redirect()->route('resep.index')->with('success', 'Resep berhasil dibuat.');
     }
+    
 
 
     public function show(Resep $resep)
@@ -91,14 +92,14 @@ class ResepController extends Controller
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255|unique:resep,nama,' . $resep->id . ',id,pembuat_id,' . $request->pembuat_id,
-            'deskripsi' => 'required|string',  // Ubah ini menjadi required
+            'deskripsi' => 'required|string',
             'waktu_persiapan' => 'nullable|string',
             'waktu_memasak' => 'nullable|string',
             'kategori_id' => 'required|exists:kategori,id',
             'pembuat_id' => 'required|exists:pembuat,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'bahan.*' => 'exists:bahan,id',
-            'jumlah.*' => 'numeric|min:1',
+            'jumlah.*' => 'nullable|string', // Update validation rule to nullable string
         ]);
     
         if ($request->hasFile('image')) {
@@ -117,7 +118,7 @@ class ResepController extends Controller
     
         $resep->bahans()->sync([]);
         foreach ($bahanIds as $bahanId) {
-            $resep->bahans()->attach($bahanId, ['jumlah' => $jumlah[$bahanId] ?? 1]);
+            $resep->bahans()->attach($bahanId, ['jumlah' => $jumlah[$bahanId] ?? '']); // Save jumlah as string
         }
     
         return redirect()->route('resep.index')->with('success', 'Resep berhasil diperbarui.');
@@ -131,7 +132,8 @@ class ResepController extends Controller
             Storage::delete('public/' . $resep->image);
         }
         $resep->delete();
-
+    
         return redirect()->route('resep.index')->with('success', 'Resep berhasil dihapus.');
     }
+    
 }
