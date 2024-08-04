@@ -6,16 +6,6 @@
     </x-slot>
 
     <div class="container mx-auto mt-8 px-4">
-        @if ($errors->any())
-            <div class="bg-red-500 text-white p-4 rounded mb-4">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-lg mx-auto p-6">
             <form action="{{ route('bahan.update', $bahan->id) }}" method="POST">
                 @csrf
