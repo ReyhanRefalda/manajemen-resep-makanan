@@ -15,14 +15,15 @@
                 </div>
             @endif
 
-            <form action="{{ route('langkah.store') }}" method="POST">
+            <form id="langkah-form" action="{{ route('langkah.store') }}" method="POST">
                 @csrf
 
                 <div class="mb-4">
                     <label for="resep_id" class="block text-gray-700 text-sm font-medium mb-1">Resep</label>
                     <select name="resep_id" id="resep_id" class="form-select w-full border-gray-300 rounded-md shadow-sm @error('resep_id') border-red-500 @enderror">
-                        @foreach ($resep as $res)
-                            <option value="{{ $res->id }}" {{ old('resep_id') == $res->id ? 'selected' : '' }}>{{ $res->nama }}</option>
+                        <option value="" disabled selected>Pilih Resep</option>
+                        @foreach ($reseps as $res)
+                            <option value="{{ $res->id }}" data-last-step="{{ $lastSteps[$res->id] }}" {{ old('resep_id') == $res->id ? 'selected' : '' }}>{{ $res->nama }}</option>
                         @endforeach
                     </select>
                     @error('resep_id')
@@ -30,22 +31,12 @@
                     @enderror
                 </div>
                 
+                <div id="existing-steps-container" class="mb-4">
+                    <!-- Langkah yang sudah ada akan ditampilkan di sini -->
+                </div>
+
                 <div id="steps-container" class="flex flex-col space-y-4">
-                    @foreach (old('steps', [['nomor' => '', 'deskripsi' => '']]) as $index => $step)
-                        <div class="step-group">
-                            <label class="block text-gray-700 text-sm font-medium mb-1">Langkah</label>
-                            <div class="flex flex-col space-y-2">
-                                <input type="number" name="steps[{{ $index }}][nomor]" value="{{ $step['nomor'] }}" class="form-input w-full border-gray-300 rounded-md shadow-sm @error('steps.'.$index.'.nomor') border-red-500 @enderror" placeholder="Nomor Langkah">
-                                @error('steps.'.$index.'.nomor')
-                                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                                @enderror
-                                <textarea name="steps[{{ $index }}][deskripsi]" class="form-textarea w-full border-gray-300 rounded-md shadow-sm @error('steps.'.$index.'.deskripsi') border-red-500 @enderror" placeholder="Deskripsi Langkah" rows="3">{{ $step['deskripsi'] }}</textarea>
-                                @error('steps.'.$index.'.deskripsi')
-                                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    @endforeach
+                    <!-- Langkah baru akan ditambahkan di sini -->
                 </div>
 
                 <div class="flex space-x-4 mt-4">
@@ -60,20 +51,139 @@
         </div>
     </div>
 
+    <style>
+        .simplified-step {
+            background-color: #f7f7f7;
+            padding: 8px;
+            border-left: 4px solid #ccc;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .simplified-step label {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .simplified-step .flex {
+            display: flex;
+            align-items: center;
+        }
+
+        .simplified-step input,
+        .simplified-step textarea {
+            border: none;
+            background: none;
+            resize: none;
+            padding: 0;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .simplified-step textarea {
+            height: auto;
+        }
+    </style>
+
     <script>
+        document.getElementById('resep_id').addEventListener('change', function() {
+            updateExistingSteps();
+            clearNewSteps();
+            addNewStep(true);  // Tambahkan langkah baru secara otomatis saat resep dipilih
+        });
+
         document.getElementById('add-step').addEventListener('click', function() {
+            var resepId = document.getElementById('resep_id').value;
+            if (!resepId) {
+                alert('Pilih resep terlebih dahulu sebelum menambahkan langkah.');
+                return;
+            }
+            addNewStep();
+        });
+
+        document.getElementById('langkah-form').addEventListener('submit', function(event) {
+            var invalidSteps = validateSteps();
+
+            if (invalidSteps.length > 0) {
+                alert('Deskripsi langkah harus diisi.');
+                event.preventDefault();  // Prevent form submission
+            }
+        });
+
+        function updateExistingSteps() {
+            var resepId = document.getElementById('resep_id').value;
+            var container = document.getElementById('existing-steps-container');
+
+            container.innerHTML = ''; // Clear existing steps
+
+            if (resepId) {
+                var selectedResep = @json($reseps).find(res => res.id == resepId);
+
+                if (selectedResep && selectedResep.langkah.length > 0) {
+                    selectedResep.langkah.forEach(function(step) {
+                        var stepElement = document.createElement('div');
+                        stepElement.classList.add('step-group', 'simplified-step');
+                        stepElement.innerHTML = `
+                            <label class="block text-gray-700 text-sm font-medium mb-1">Langkah ${step.nomor}</label>
+                            <div class="flex flex-col space-y-2">
+                                <input type="number" value="${step.nomor}" class="form-input w-full border-gray-300 rounded-md shadow-sm" placeholder="Nomor Langkah" readonly>
+                                <textarea class="form-textarea w-full border-gray-300 rounded-md shadow-sm" placeholder="Deskripsi Langkah" rows="3" readonly>${step.deskripsi}</textarea>
+                            </div>
+                        `;
+                        container.appendChild(stepElement);
+                    });
+                } else {
+                    container.innerHTML = '<p class="text-gray-500">Belum ada langkah untuk resep ini.</p>';
+                }
+            }
+        }
+
+        function clearNewSteps() {
+            document.getElementById('steps-container').innerHTML = '';
+        }
+
+        function addNewStep(isInitial = false) {
             var container = document.getElementById('steps-container');
             var stepCount = container.getElementsByClassName('step-group').length;
+            var lastStep = parseInt(document.querySelector('#resep_id option:checked').dataset.lastStep) || 0;
+            var newStepNumber = lastStep + stepCount + 1;
+
+            if (isInitial && lastStep == 0) return; // Jangan tambahkan langkah baru otomatis jika belum ada langkah sebelumnya
+
             var newStep = document.createElement('div');
             newStep.classList.add('step-group');
             newStep.innerHTML = `
-                <label class="block text-gray-700 text-sm font-medium mb-1">Langkah ${stepCount + 1}</label>
+                <label class="block text-gray-700 text-sm font-medium mb-1">Langkah ${newStepNumber}</label>
                 <div class="flex flex-col space-y-2">
-                    <input type="number" name="steps[${stepCount}][nomor]" class="form-input w-full border-gray-300 rounded-md shadow-sm" placeholder="Nomor Langkah">
+                    <input type="number" name="steps[${stepCount}][nomor]" value="${newStepNumber}" class="form-input w-full border-gray-300 rounded-md shadow-sm" placeholder="Nomor Langkah" readonly>
                     <textarea name="steps[${stepCount}][deskripsi]" class="form-textarea w-full border-gray-300 rounded-md shadow-sm" placeholder="Deskripsi Langkah" rows="3"></textarea>
                 </div>
             `;
             container.appendChild(newStep);
+
+            // Simplify existing steps
+            var existingSteps = document.querySelectorAll('#existing-steps-container .step-group');
+            existingSteps.forEach(step => step.classList.add('simplified-step'));
+        }
+
+        function validateSteps() {
+            var invalidSteps = [];
+            var steps = document.querySelectorAll('textarea[name^="steps"]');
+
+            steps.forEach(function(step) {
+                if (step.value.trim() === '') {
+                    invalidSteps.push(step);
+                }
+            });
+
+            return invalidSteps;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('resep_id').value) {
+                updateExistingSteps();
+                addNewStep(true);  // Tambahkan langkah baru secara otomatis saat halaman dimuat
+            }
         });
     </script>
 </x-app-layout>
