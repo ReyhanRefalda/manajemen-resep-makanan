@@ -56,13 +56,18 @@ class BahanController extends Controller
 
     public function update(Request $request, Bahan $bahan)
     {
+        // Ambil nama bahan yang lama
+        $oldNama = $bahan->nama;
+    
+        // Validasi
         $request->validate([
             'nama' => [
                 'required',
                 'string',
                 'max:255',
-                function ($attribute, $value, $fail) {
-                    if (Bahan::whereRaw('LOWER(nama) = ?', [strtolower($value)])->exists()) {
+                function ($attribute, $value, $fail) use ($oldNama) {
+                    // Hanya cek jika nama bahan berubah
+                    if (strtolower($value) !== strtolower($oldNama) && Bahan::whereRaw('LOWER(nama) = ?', [strtolower($value)])->exists()) {
                         $fail('Nama bahan sudah ada.');
                     }
                 },
@@ -72,9 +77,12 @@ class BahanController extends Controller
             'nama.string' => 'Nama bahan harus berupa huruf',
             'nama.max' => 'Nama bahan tidak boleh lebih dari 255 karakter',
         ]);
-
-        $bahan->update($request->all());
-
+    
+        // Perbarui data jika ada perubahan
+        if ($request->nama !== $oldNama) {
+            $bahan->update($request->all());
+        }
+    
         return redirect()->route('bahan.index')->with('success', 'Bahan berhasil diperbarui.');
     }
 

@@ -29,6 +29,27 @@
                 </div>
 
                 <div class="mb-4">
+                    <label for="bahan" class="block text-gray-700 text-sm font-medium mb-1">Pilih Bahan</label>
+                    <select name="bahan[]" id="bahan" multiple="multiple" class="form-multiselect w-full border-gray-300 rounded-md shadow-sm @error('bahan') border-red-500 @enderror">
+                        @foreach($bahans as $bahan)
+                            <option value="{{ $bahan->id }}" {{ in_array($bahan->id, $resep->bahans->pluck('id')->toArray()) ? 'selected' : '' }}>{{ $bahan->nama }}</option>
+                        @endforeach
+                    </select>
+                    @error('bahan')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-4" id="jumlahBahanContainer">
+                    @foreach($resep->bahans as $bahan)
+                        <div class="mb-2 jumlah-bahan" data-bahan-id="{{ $bahan->id }}">
+                            <label class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk {{ $bahan->nama }}</label>
+                            <input type="text" name="jumlah[{{ $bahan->id }}]" min="1" placeholder="Jumlah untuk {{ $bahan->nama }}" class="form-input w-full border-gray-300 rounded-md shadow-sm mb-2" value="{{ $bahan->pivot->jumlah }}">
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="mb-4">
                     <label for="waktu_persiapan" class="block text-gray-700 text-sm font-medium mb-1">Waktu Persiapan</label>
                     <input type="text" name="waktu_persiapan" class="form-input w-full border-gray-300 rounded-md shadow-sm @error('waktu_persiapan') border-red-500 @enderror" id="waktu_persiapan" value="{{ $resep->waktu_persiapan }}">
                     @error('waktu_persiapan')
@@ -68,26 +89,7 @@
                     @enderror
                 </div>
 
-                <div class="mb-4">
-                    <label for="bahan" class="block text-gray-700 text-sm font-medium mb-1">Pilih Bahan</label>
-                    <select name="bahan[]" id="bahan" multiple="multiple" class="form-multiselect w-full border-gray-300 rounded-md shadow-sm @error('bahan') border-red-500 @enderror">
-                        @foreach($bahans as $bahan)
-                            <option value="{{ $bahan->id }}" {{ in_array($bahan->id, $resep->bahans->pluck('id')->toArray()) ? 'selected' : '' }}>{{ $bahan->nama }}</option>
-                        @endforeach
-                    </select>
-                    @error('bahan')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-4" id="jumlahBahanContainer">
-                    @foreach($resep->bahans as $bahan)
-                        <div class="mb-2 jumlah-bahan" data-bahan-id="{{ $bahan->id }}">
-                            <label class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk {{ $bahan->nama }}</label>
-                            <input type="text" name="jumlah[{{ $bahan->id }}]" min="1" placeholder="Jumlah untuk {{ $bahan->nama }}" class="form-input w-full border-gray-300 rounded-md shadow-sm mb-2" value="{{ $bahan->pivot->jumlah }}">
-                        </div>
-                    @endforeach
-                </div>
+                
 
                 <div class="mb-4">
                     <label for="image" class="block text-gray-700 text-sm font-medium mb-1">Gambar</label>
