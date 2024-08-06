@@ -110,22 +110,23 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Select2
             $('#bahan').select2({
                 placeholder: "Pilih Bahan",
                 allowClear: true
             });
-        
+
             let bahanList = {!! json_encode($bahans->toArray()) !!};
-            let jumlahValues = {}; // Objek untuk menyimpan nilai jumlah bahan
-        
+            let jumlahValues = {!! json_encode(old('jumlah', [])) !!}; // Fetch old input for 'jumlah'
+
             function populateJumlahFields(selectedBahan) {
                 let jumlahContainer = $('#jumlah-container');
                 jumlahContainer.empty(); // Clear existing fields
-        
+
                 selectedBahan.forEach(function(id) {
                     let bahan = bahanList.find(b => b.id == id);
                     if (bahan) {
-                        let existingValue = jumlahValues[id] || ''; // Ambil nilai dari objek jika ada
+                        let existingValue = jumlahValues[id] || ''; // Fetch value from the old input or set to empty
                         jumlahContainer.append(`
                             <div class="mb-2" id="jumlah-${bahan.id}">
                                 <label for="jumlah[${bahan.id}]" class="block text-gray-700 text-sm font-medium mb-1">Jumlah untuk ${bahan.nama}</label>
@@ -135,26 +136,26 @@
                     }
                 });
             }
-        
-            // Ambil nilai dari input jika ada
+
+            // Handle change on bahan select
             $('#bahan').on('change', function() {
                 let selectedBahan = $(this).val() || [];
-                
-                // Simpan nilai jumlah bahan saat ini
+
+                // Save current 'jumlah' values
                 $('#jumlah-container input').each(function() {
                     let name = $(this).attr('name');
                     let value = $(this).val();
-                    let id = name.match(/\d+/)[0]; // Ambil ID dari nama input
+                    let id = name.match(/\d+/)[0]; // Extract ID from input name
                     jumlahValues[id] = value;
                 });
-        
+
                 populateJumlahFields(selectedBahan);
             });
-        
-            // Inisialisasi nilai jumlah bahan saat halaman dimuat
+
+            // Initialize jumlah fields based on selected bahan on page load
             let initialBahan = $('#bahan').val() || [];
             populateJumlahFields(initialBahan);
-        
+
             $('#resepForm').on('submit', function(e) {
                 let selectedBahan = $('#bahan').val();
                 if (!selectedBahan || selectedBahan.length === 0) {
@@ -162,7 +163,7 @@
                     alert('Pilih setidaknya satu bahan.');
                     return;
                 }
-        
+
                 let valid = true;
                 selectedBahan.forEach(function(id) {
                     let jumlahInput = $(`input[name="jumlah[${id}]"]`);
@@ -173,28 +174,12 @@
                         jumlahInput.removeClass('border-red-500');
                     }
                 });
-        
+
                 if (!valid) {
                     e.preventDefault();
                     alert('Jumlah untuk setiap bahan yang dipilih harus diisi.');
                 }
             });
-        
-            // Restore the image input field value after form validation fails
-            const imageInput = document.querySelector('input[name="image"]');
-            if (imageInput) {
-                imageInput.addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            // Display the selected image
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            }
         });
-        </script>
-        
+    </script>
 </x-app-layout>
