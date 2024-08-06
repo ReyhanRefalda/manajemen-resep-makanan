@@ -19,6 +19,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/langkah/massdestroy', [LangkahController::class, 'massDestroy'])->name('langkah.massdestroy');
     Route::get('/search-resep', [ResepController::class, 'searchResep'])->name('search-resep');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     Route::resource('resep', ResepController::class);
     Route::resource('bahan', BahanController::class);
@@ -26,11 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('pembuat', PembuatController::class);
     Route::resource('langkah', LangkahController::class);
 
-    Route::middleware('auth')->group(function () {
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    });
+    
 
     // Other routes that require authentication
 });
