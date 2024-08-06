@@ -43,8 +43,8 @@ class ResepController extends Controller
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255|unique:resep,nama,NULL,id,pembuat_id,' . $request->pembuat_id,
             'deskripsi' => 'required|string',
-            'waktu_persiapan' => 'nullable|string',
-            'waktu_memasak' => 'nullable|string',
+            'waktu_persiapan' => 'required|string',
+            'waktu_memasak' => 'required|string',
             'pembuat_id' => 'required|exists:pembuat,id',
             'kategori_id' => 'required|exists:kategori,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -58,16 +58,18 @@ class ResepController extends Controller
             'deskripsi.required' => 'Deskripsi resep harus diisi.',
             'deskripsi.string' => 'Deskripsi resep harus berupa string.',
             'waktu_persiapan.string' => 'Waktu persiapan harus berupa string.',
+            'waktu_persiapan.required' => 'Waktu persiapan harus diisi.',
             'waktu_memasak.string' => 'Waktu memasak harus berupa string.',
-            'pembuat_id.required' => 'ID pembuat harus diisi.',
-            'pembuat_id.exists' => 'ID pembuat tidak ditemukan.',
-            'kategori_id.required' => 'ID kategori harus diisi.',
-            'kategori_id.exists' => 'ID kategori tidak ditemukan.',
+            'waktu_memasak.required' => 'Waktu memasak harus diisi.',
+            'pembuat_id.required' => 'pembuat harus diisi.',
+            'pembuat_id.exists' => 'pembuat tidak ditemukan.',
+            'kategori_id.required' => 'kategori harus diisi.',
+            'kategori_id.exists' => 'kategori tidak ditemukan.',
             'image.required' => 'Gambar harus diisi',
             'image.image' => 'File harus berupa gambar.',
             'image.mimes' => 'Format gambar yang diizinkan adalah jpeg, png, jpg, dan gif.',
             'image.max' => 'Ukuran gambar maksimal 2048 kilobyte (2 MB).',
-            'bahan.*.exists' => 'ID bahan tidak ditemukan.',
+            'bahan.*.exists' => 'bahan tidak ditemukan.',
             'jumlah.*.string' => 'Jumlah harus berupa string jika diisi.',
         ]);
 
@@ -110,13 +112,13 @@ class ResepController extends Controller
     public function update(Request $request, Resep $resep)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string|max:255|unique:resep,nama,' . $resep->id . ',id,pembuat_id,' . $request->pembuat_id,
+            'nama' => 'required|string|max:255|unique:resep,nama,NULL,id,pembuat_id,' . $request->pembuat_id,
             'deskripsi' => 'required|string',
-            'waktu_persiapan' => 'nullable|string',
-            'waktu_memasak' => 'nullable|string',
-            'kategori_id' => 'required|exists:kategori,id',
+            'waktu_persiapan' => 'required|string',
+            'waktu_memasak' => 'required|string',
             'pembuat_id' => 'required|exists:pembuat,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'kategori_id' => 'required|exists:kategori,id',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'bahan.*' => 'exists:bahan,id',
             'jumlah.*' => 'nullable|string', // Update validation rule to nullable string
         ], [
@@ -127,16 +129,18 @@ class ResepController extends Controller
             'deskripsi.required' => 'Deskripsi resep harus diisi.',
             'deskripsi.string' => 'Deskripsi resep harus berupa string.',
             'waktu_persiapan.string' => 'Waktu persiapan harus berupa string.',
+            'waktu_persiapan.required' => 'Waktu persiapan harus diisi.',
             'waktu_memasak.string' => 'Waktu memasak harus berupa string.',
-            'pembuat_id.required' => 'ID pembuat harus diisi.',
-            'pembuat_id.exists' => 'ID pembuat tidak ditemukan.',
-            'kategori_id.required' => 'ID kategori harus diisi.',
-            'kategori_id.exists' => 'ID kategori tidak ditemukan.',
+            'waktu_memasak.required' => 'Waktu memasak harus diisi.',
+            'pembuat_id.required' => 'pembuat harus diisi.',
+            'pembuat_id.exists' => 'pembuat tidak ditemukan.',
+            'kategori_id.required' => 'kategori harus diisi.',
+            'kategori_id.exists' => 'kategori tidak ditemukan.',
+            'image.required' => 'Gambar harus diisi',
             'image.image' => 'File harus berupa gambar.',
-
             'image.mimes' => 'Format gambar yang diizinkan adalah jpeg, png, jpg, dan gif.',
             'image.max' => 'Ukuran gambar maksimal 2048 kilobyte (2 MB).',
-            'bahan.*.exists' => 'ID bahan tidak ditemukan.',
+            'bahan.*.exists' => 'bahan tidak ditemukan.',
             'jumlah.*.string' => 'Jumlah harus berupa string jika diisi.',
         ]);
 
