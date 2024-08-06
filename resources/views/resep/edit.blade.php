@@ -134,7 +134,7 @@
 
                 // Add fields for newly selected bahan
                 selectedBahans.forEach(function(bahanId) {
-                    if (!$(`.jumlah-bahan[data-bahan-id="${bahanId}"]`).length) {
+                    if (!$(.jumlah-bahan[data-bahan-id="${bahanId}"]).length) {
                         let bahanName = $('#bahan option[value="'+bahanId+'"]').text();
                         $('#jumlahBahanContainer').append(`
                             <div class="mb-2 jumlah-bahan" data-bahan-id="${bahanId}">

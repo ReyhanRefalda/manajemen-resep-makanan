@@ -80,7 +80,9 @@
                                             {{ $step->nomor }}. {{ Str::limit($step->deskripsi,50) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="{{ route('langkah.edit', $step->id) }}" class="text-green-600 hover:text-green-900 ml-4">Edit</a>
+                                            <a href="{{ route('langkah.edit', $step->id) }}" class="bg-yellow-500 text-white px-2 py-1  shadow hover:bg-yellow-600 transition duration-300 flex items-center justify-center">
+                                                <i class="fa-solid fa-pen text-base"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
