@@ -31,11 +31,15 @@ class ResepController extends Controller
 
     public function create()
     {
+        $reseps = Resep::all();
+        $bahans = Bahan::all();
         $kategoris = Kategori::all();
         $pembuat = Pembuat::all();
-        $bahans = Bahan::all();
-
-        return view('resep.create', compact('kategoris', 'pembuat', 'bahans'));
+        $lastSteps = Resep::withCount('langkah')->get()->mapWithKeys(function ($resep) {
+            return [$resep->id => $resep->langkahs_count];
+        });
+    
+        return view('resep.create', compact('reseps', 'bahans', 'kategoris', 'pembuat', 'lastSteps'));
     }
 
     public function store(Request $request)
@@ -49,7 +53,7 @@ class ResepController extends Controller
             'kategori_id' => 'required|exists:kategori,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'bahan.*' => 'exists:bahan,id',
-            'jumlah.*' => 'nullable|string', // Update validation rule to nullable string
+            'jumlah.*' => 'nullable|string', 
         ], [
             'nama.required' => 'Nama resep harus diisi.',
             'nama.string' => 'Nama resep harus berupa string.',

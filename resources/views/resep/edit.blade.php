@@ -130,10 +130,9 @@
                     } else {
                         $(this).hide();
                     }
-                });
-
-                // Add fields for newly selected bahan
-                selectedBahans.forEach(function(bahanId) {
+  
+                    if (!$(`.jumlah-bahan[data-bahan-id="${bahanId}"]`).length) {
+                        let bahanName = $('#bahan
                     if (!$(.jumlah-bahan[data-bahan-id="${bahanId}"]).length) {
                         let bahanName = $('#bahan option[value="'+bahanId+'"]').text();
                         $('#jumlahBahanContainer').append(`
@@ -149,4 +148,4 @@
             updateJumlahBahan(); // Initial call to set the correct visibility
         });
     </script>
-</x-app-layout>
+</x-app-layout>x-app-layout>

@@ -37,7 +37,7 @@ class LangkahController extends Controller
             $lastSteps[$resep->id] = $lastStepNumber;
         }
 
-        return view('langkah.create', compact('reseps', 'lastSteps'));
+        return view('resep.create', compact('reseps', 'lastSteps'));
     }
 
 
@@ -62,6 +62,7 @@ class LangkahController extends Controller
             'steps.*.nomor' => 'required|integer',
             'steps.*.deskripsi' => 'required|string',
         ], [
+            'resep_id.required' => 'Nama Resep harus dipilih.',
             'steps.*.nomor.required' => 'Nomor langkah harus diisi.',
             'steps.*.nomor.integer' => 'Nomor langkah harus berupa angka.',
             'steps.*.deskripsi.required' => 'Deskripsi langkah harus diisi.',
@@ -121,6 +122,8 @@ class LangkahController extends Controller
             'nomor' => 'required|integer',
             'deskripsi' => 'required|string', // Allow deskripsi to be nullable
         ], [
+            
+            'resep_id.required' => 'Nama Resep harus dipilih.',
             'nomor.required' => 'Nomor langkah harus diisi.',
             'nomor.integer' => 'Nomor langkah harus berupa angka.',
             'deskripsi.required' => 'Deskripsi langkah harus diisi.',
