@@ -119,10 +119,11 @@ class LangkahController extends Controller
         $validatedData = $request->validate([
             'resep_id' => 'required|exists:resep,id',
             'nomor' => 'required|integer',
-            'deskripsi' => 'nullable|string', // Allow deskripsi to be nullable
+            'deskripsi' => 'required|string', // Allow deskripsi to be nullable
         ], [
             'nomor.required' => 'Nomor langkah harus diisi.',
             'nomor.integer' => 'Nomor langkah harus berupa angka.',
+            'deskripsi.required' => 'Deskripsi langkah harus diisi.',
         ]);
 
         $resep_id = $request->input('resep_id');

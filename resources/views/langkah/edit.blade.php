@@ -48,7 +48,7 @@
 
                 <div class="mb-4">
                     <label for="deskripsi" class="block text-gray-700 text-sm font-medium mb-1">Deskripsi Langkah</label>
-                    <textarea name="deskripsi" id="deskripsi" class="form-textarea w-full border-gray-300 rounded-md shadow-sm @error('deskripsi') border-red-500 @enderror" placeholder="Deskripsi Langkah" rows="3">{{ old('deskripsi', $langkah->deskripsi) }}</textarea>
+                    <textarea name="deskripsi" id="deskripsi" class="form-textarea w-full border-gray-300 rounded-md shadow-sm @error('deskripsi') border-red-500 @enderror" placeholder="Deskripsi Langkah" rows="3">{{ old('deskripsi') ?? $langkah->deskripsi }}</textarea>
                     @error('deskripsi')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
