@@ -18,12 +18,14 @@
             <form id="langkah-form" action="{{ route('langkah.store') }}" method="POST">
                 @csrf
 
+                <input type="hidden" name="resep_id" value="{{ $resep_id }}">
+
                 <div class="mb-4">
                     <label for="resep_id" class="block text-gray-700 text-sm font-medium mb-1">Resep</label>
                     <select name="resep_id" id="resep_id" class="form-select w-full border-gray-300 rounded-md shadow-sm @error('resep_id') border-red-500 @enderror">
                         <option value="" disabled selected>Pilih Resep</option>
-                        @foreach ($reseps as $res)
-                            <option value="{{ $res->id }}" data-last-step="{{ $lastSteps[$res->id] }}" {{ old('resep_id') == $res->id ? 'selected' : '' }}>{{ $res->nama }}</option>
+                        @foreach ($resep as $res)
+                            <option value="{{ $res->id }}" data-last-step="{{ $lastSteps[$res->id] ?? 0 }}" {{ $resep_id == $res->id ? 'selected' : '' }}>{{ $res->nama }}</option>
                         @endforeach
                     </select>
                     @error('resep_id')
@@ -86,69 +88,48 @@
     </style>
 
     <script>
-        document.getElementById('resep_id').addEventListener('change', function() {
-            updateExistingSteps();
-            clearNewSteps();
-            addNewStep(true);  // Tambahkan langkah baru secara otomatis saat resep dipilih
-        });
+        var reseps = @json($resep);
+        var lastSteps = @json($lastSteps);
+        var resepId = @json($resep_id);
 
-        document.getElementById('add-step').addEventListener('click', function() {
-            var resepId = document.getElementById('resep_id').value;
-            if (!resepId) {
-                alert('Pilih resep terlebih dahulu sebelum menambahkan langkah.');
-                return;
-            }
-            addNewStep();
-        });
-
-        document.getElementById('langkah-form').addEventListener('submit', function(event) {
-            var invalidSteps = validateSteps();
-
-            if (invalidSteps.length > 0) {
-                alert('Deskripsi langkah harus diisi.');
-                event.preventDefault();  // Prevent form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            if (resepId) {
+                updateExistingSteps();
+                addNewStep(true); // Tambahkan langkah baru secara otomatis saat halaman dimuat
             }
         });
 
         function updateExistingSteps() {
-            var resepId = document.getElementById('resep_id').value;
             var container = document.getElementById('existing-steps-container');
+            container.innerHTML = '';
 
-            container.innerHTML = ''; // Clear existing steps
+            var selectedResep = reseps.find(res => res.id == resepId);
 
-            if (resepId) {
-                var selectedResep = @json($reseps).find(res => res.id == resepId);
-
-                if (selectedResep && selectedResep.langkah.length > 0) {
-                    selectedResep.langkah.forEach(function(step) {
-                        var stepElement = document.createElement('div');
-                        stepElement.classList.add('step-group', 'simplified-step');
-                        stepElement.innerHTML = `
-                            <label class="block text-gray-700 text-sm font-medium mb-1">Langkah ${step.nomor}</label>
-                            <div class="flex flex-col space-y-2">
-                                <input type="number" value="${step.nomor}" class="form-input w-full border-gray-300 rounded-md shadow-sm" placeholder="Nomor Langkah" readonly>
-                                <textarea class="form-textarea w-full border-gray-300 rounded-md shadow-sm" placeholder="Deskripsi Langkah" rows="3" readonly>${step.deskripsi}</textarea>
-                            </div>
-                        `;
-                        container.appendChild(stepElement);
-                    });
-                } else {
-                    container.innerHTML = '<p class="text-gray-500">Belum ada langkah untuk resep ini.</p>';
-                }
+            if (selectedResep && selectedResep.langkah.length > 0) {
+                selectedResep.langkah.forEach(function(step) {
+                    var stepElement = document.createElement('div');
+                    stepElement.classList.add('step-group', 'simplified-step');
+                    stepElement.innerHTML = `
+                        <label class="block text-gray-700 text-sm font-medium mb-1">Langkah ${step.nomor}</label>
+                        <div class="flex flex-col space-y-2">
+                            <input type="number" value="${step.nomor}" class="form-input w-full border-gray-300 rounded-md shadow-sm" placeholder="Nomor Langkah" readonly>
+                            <textarea class="form-textarea w-full border-gray-300 rounded-md shadow-sm" placeholder="Deskripsi Langkah" rows="3" readonly>${step.deskripsi}</textarea>
+                        </div>
+                    `;
+                    container.appendChild(stepElement);
+                });
+            } else {
+                container.innerHTML = '<p class="text-gray-500">Belum ada langkah untuk resep ini.</p>';
             }
-        }
-
-        function clearNewSteps() {
-            document.getElementById('steps-container').innerHTML = '';
         }
 
         function addNewStep(isInitial = false) {
             var container = document.getElementById('steps-container');
             var stepCount = container.getElementsByClassName('step-group').length;
-            var lastStep = parseInt(document.querySelector('#resep_id option:checked').dataset.lastStep) || 0;
+            var lastStep = parseInt(lastSteps[resepId] || 0);
             var newStepNumber = lastStep + stepCount + 1;
 
-            if (isInitial && lastStep == 0) return; // Jangan tambahkan langkah baru otomatis jika belum ada langkah sebelumnya
+            if (isInitial && lastStep == 0) return;
 
             var newStep = document.createElement('div');
             newStep.classList.add('step-group');
@@ -161,29 +142,8 @@
             `;
             container.appendChild(newStep);
 
-            // Simplify existing steps
             var existingSteps = document.querySelectorAll('#existing-steps-container .step-group');
             existingSteps.forEach(step => step.classList.add('simplified-step'));
         }
-
-        function validateSteps() {
-            var invalidSteps = [];
-            var steps = document.querySelectorAll('textarea[name^="steps"]');
-
-            steps.forEach(function(step) {
-                if (step.value.trim() === '') {
-                    invalidSteps.push(step);
-                }
-            });
-
-            return invalidSteps;
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            if (document.getElementById('resep_id').value) {
-                updateExistingSteps();
-                addNewStep(true);  // Tambahkan langkah baru secara otomatis saat halaman dimuat
-            }
-        });
     </script>
 </x-app-layout>

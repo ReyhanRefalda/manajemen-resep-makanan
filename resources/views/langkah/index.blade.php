@@ -25,26 +25,19 @@
                     });
                 </script>
             @endif
-            
-            <div class="flex items-center justify-between mb-4">
+
+            <div class="mb-6 flex items-center justify-between">
                 <!-- Search Form -->
-                <div class="relative flex-1 max-w-md">
-                    <form action="{{ route('langkah.index') }}" method="GET" class="flex">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Langkah ..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" />
-                        <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                    </form>
-                </div>
-            
-                <!-- Add Button -->
-                <a href="{{ route('langkah.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ml-4">
-                    Tambah Langkah
-                </a>
+                <form action="{{ route('langkah.index') }}" method="GET" class="flex items-center w-full max-w-md mx-auto">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Langkah ..." class="pl-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" />
+                    <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        
+                    </button>
+                </form>
             </div>
             
             @if($resep->isEmpty())
-                <p class="text-gray-500">
+                <p class="text-gray-500 text-center">
                     @if(request('search'))
                         Tidak ada langkah ditemukan untuk pencarian "{{ request('search') }}"
                     @else
@@ -64,12 +57,11 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resep</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Langkah</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach ($resep as $index => $res)
-                                @foreach ($res->langkah as $step)
+                                @foreach ($res->langkahs as $step)
                                     <tr class="hover:bg-gray-50 transition duration-300">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             <input type="checkbox" name="ids[]" value="{{ $step->id }}" class="form-checkbox">
@@ -78,11 +70,6 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $res->nama }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {{ $step->nomor }}. {{ Str::limit($step->deskripsi,50) }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="{{ route('langkah.edit', $step->id) }}" class="bg-yellow-500 text-white px-2 py-1  shadow hover:bg-yellow-600 transition duration-300 flex items-center justify-center">
-                                                <i class="fa-solid fa-pen text-base"></i>
-                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach

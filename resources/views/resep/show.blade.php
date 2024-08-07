@@ -42,7 +42,7 @@
             <div class="p-6">
                 <h3 class="text-lg font-semibold mb-4">Langkah-langkah</h3>
                 <ul class="list-disc list-inside text-sm">
-                    @forelse($resep->langkah as $langkah)
+                    @forelse($resep->langkahs as $langkah)
                         <li class="mb-1"><strong>Langkah {{ $langkah->nomor }}:</strong> {{ $langkah->deskripsi }}</li>
                     @empty
                         <li>Tidak ada langkah.</li>

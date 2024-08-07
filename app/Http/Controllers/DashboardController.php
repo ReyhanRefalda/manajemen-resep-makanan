@@ -12,7 +12,7 @@ class DashboardController extends Controller
     {
         $search = $request->get('search');
 
-        $reseps = Resep::with('kategori', 'pembuat', 'bahans') // Pastikan nama relasinya sesuai
+        $reseps = Resep::with('kategori', 'pembuat', 'bahans')
             ->when($search, function ($query, $search) {
                 return $query->where('nama', 'like', '%' . $search . '%')
                              ->orWhereHas('bahans', function($query) use ($search) {
@@ -20,7 +20,7 @@ class DashboardController extends Controller
                              });
             })
             ->get();
-        
-        return view('dashboard', compact('reseps'));
+
+        return view('dashboard', compact('reseps', 'search'));
     }
 }

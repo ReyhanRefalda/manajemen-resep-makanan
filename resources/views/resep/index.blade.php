@@ -1,34 +1,33 @@
 <x-app-layout>
-    <div class="container mx-auto mt-8 px-4">
-        <x-slot name="header">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Daftar Resep') }}
-            </h2>
-            
-        </x-slot>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Daftar Resep') }}
+        </h2>
+    </x-slot>
 
-        <!-- Card with Table -->
+    <div class="container mx-auto mt-8 px-4">
+        <!-- Flash Message -->
+        @if(session('success'))
+            <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4" role="alert">
+                {{ session('success') }}
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(function() {
+                        const alert = document.getElementById('success-alert');
+                        if (alert) {
+                            alert.style.opacity = 0;
+                            setTimeout(function() {
+                                alert.style.display = 'none';
+                            }, 500);
+                        }
+                    }, 6000);
+                });
+            </script>
+        @endif
+
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            
             <div class="p-4">
-                @if(session('success'))
-                <div id="success-alert" class="bg-green-500 text-white p-4 rounded mb-4" role="alert">
-                    {{ session('success') }}
-                </div>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        setTimeout(function() {
-                            const alert = document.getElementById('success-alert');
-                            if (alert) {
-                                alert.style.opacity = 0;
-                                setTimeout(function() {
-                                    alert.style.display = 'none';
-                                }, 500);
-                            }
-                        }, 6000);
-                    });
-                </script>
-                @endif
                 <div class="flex items-center justify-between mb-6">
                     <!-- Search Form -->
                     <div class="relative flex-1 max-w-md">

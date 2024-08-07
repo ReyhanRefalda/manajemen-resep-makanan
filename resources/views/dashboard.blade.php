@@ -43,7 +43,9 @@
             </div>
             @empty
             <div class="flex items-center justify-center w-full col-span-full mt-6">
-                <p class="text-gray-600 text-lg">Tidak ada resep tersedia.</p>
+                <p class="text-gray-600 text-lg">
+                    Tidak ada resep yang ditemukan untuk pencarian '{{ request()->get('search') }}'.
+                </p>
             </div>
             @endforelse
         </div>
