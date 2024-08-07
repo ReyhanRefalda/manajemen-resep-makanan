@@ -19,27 +19,31 @@ class LangkahController extends Controller
             $resepQuery->where('nama', 'LIKE', "%{$search}%");
         }
 
-        $resep = $resepQuery->with('langkah')->get();
+        $resep = $resepQuery->with('langkahs')->get();
 
         return view('langkah.index', compact('resep'));
     }
 
 
 
-    public function create()
+    public function create(Request $request)
     {
-        $reseps = Resep::with('langkah')->get();
-
-        // Menyimpan nomor langkah terakhir dari setiap resep
-        $lastSteps = [];
-        foreach ($reseps as $resep) {
-            $lastStepNumber = $resep->langkah->max('nomor') ?? 0;
-            $lastSteps[$resep->id] = $lastStepNumber;
-        }
-
-        return view('resep.create', compact('reseps', 'lastSteps'));
+        $resep_id = $request->query('resep_id');
+    
+        // Ambil data resep berdasarkan id
+        $resep = Resep::all(); // Atau sesuaikan dengan query yang sesuai
+        $lastSteps = []; // Ambil langkah terakhir untuk setiap resep
+    
+        // Kirim data ke view
+        return view('langkah.create', [
+            'resep_id' => $resep_id,
+            'resep' => $resep,
+            'lastSteps' => $lastSteps
+        ]);
     }
-
+    
+    
+    
 
 
 
@@ -54,55 +58,41 @@ class LangkahController extends Controller
 
         return redirect()->route('langkah.index')->with('error', 'Tidak ada langkah yang dipilih untuk dihapus.');
     }
-
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'resep_id' => 'required|exists:resep,id',
-            'steps.*.nomor' => 'required|integer',
-            'steps.*.deskripsi' => 'required|string',
-        ], [
-            'resep_id.required' => 'Nama Resep harus dipilih.',
-            'steps.*.nomor.required' => 'Nomor langkah harus diisi.',
-            'steps.*.nomor.integer' => 'Nomor langkah harus berupa angka.',
-            'steps.*.deskripsi.required' => 'Deskripsi langkah harus diisi.',
+            'langkah.*.deskripsi' => 'required|string',
+            'langkah.*.nomor' => 'required|integer',
         ]);
-
-        $steps = $request->input('steps');
-        $resep_id = $request->input('resep_id');
-
-        // Ambil langkah yang ada untuk resep ini
-        $existingSteps = Langkah::where('resep_id', $resep_id)
-            ->orderBy('nomor')
-            ->pluck('nomor')
-            ->toArray();
-
-        $maxExistingStep = empty($existingSteps) ? 0 : max($existingSteps);
-
-        foreach ($steps as $step) {
-            $expectedStepNumber = $maxExistingStep + 1;
-
-            if ($step['nomor'] != $expectedStepNumber) {
-                return redirect()->route('langkah.create')->with('error', 'Langkah harus ditambahkan secara berurutan. Langkah ke-' . $expectedStepNumber . ' harus ditambahkan. Langkah yang Anda masukkan adalah ke-' . $step['nomor'] . '.');
-            }
-
-            // Cek jika nomor langkah sudah ada
-            if (in_array($step['nomor'], $existingSteps)) {
-                return redirect()->route('langkah.create')->with('error', 'Langkah ke-' . $step['nomor'] . ' sudah ada untuk resep ini.');
-            }
-
-            $validatedData = [
-                'resep_id' => $resep_id,
-                'nomor' => $step['nomor'],
-                'deskripsi' => $step['deskripsi'],
-            ];
-
-            Langkah::create($validatedData);
-            $maxExistingStep = $step['nomor']; // Update langkah maksimal yang ada
+    
+        $resepId = $request->input('resep_id');
+        $langkahs = $request->input('langkah', []);
+    
+        // Hapus langkah yang ada sebelum menyimpan yang baru
+        Langkah::where('resep_id', $resepId)->delete();
+    
+        foreach ($langkahs as $langkah) {
+            Langkah::create([
+                'resep_id' => $resepId,
+                'deskripsi' => $langkah['deskripsi'],
+                'nomor' => $langkah['nomor'],
+            ]);
         }
-
-        return redirect()->route('langkah.index')->with('success', 'Langkah berhasil ditambahkan.');
+    
+        // Redirect to the resep.index page with a success message
+        return redirect()->route('resep.index')->with('success', 'Langkah berhasil disimpan!');
     }
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
 
     public function show(Langkah $langkah)
     {
@@ -115,48 +105,38 @@ class LangkahController extends Controller
         return view('langkah.edit', compact('langkah', 'resep'));
     }
 
-    public function update(Request $request, Langkah $langkah)
+    public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'resep_id' => 'required|exists:resep,id',
-            'nomor' => 'required|integer',
-            'deskripsi' => 'required|string', // Allow deskripsi to be nullable
-        ], [
-            
-            'resep_id.required' => 'Nama Resep harus dipilih.',
-            'nomor.required' => 'Nomor langkah harus diisi.',
-            'nomor.integer' => 'Nomor langkah harus berupa angka.',
-            'deskripsi.required' => 'Deskripsi langkah harus diisi.',
+        $validated = $request->validate([
+            'langkah.*.deskripsi' => 'required|string',
+            'langkah.*.nomor' => 'required|integer'
         ]);
-
-        $resep_id = $request->input('resep_id');
-
-        // Ambil langkah yang ada untuk resep ini, kecuali yang sedang diupdate
-        $existingSteps = Langkah::where('resep_id', $resep_id)
-            ->where('id', '<>', $langkah->id)
-            ->pluck('nomor')
-            ->toArray();
-
-        $maxExistingStep = empty($existingSteps) ? 0 : max($existingSteps);
-
-        if ($validatedData['nomor'] > $maxExistingStep + 1) {
-            return redirect()->route('langkah.edit', $langkah->id)->with('error', 'Langkah harus ditambahkan secara berurutan. Langkah ke-' . ($maxExistingStep + 1) . ' harus ditambahkan.');
+    
+        $resep = Resep::findOrFail($id);
+    
+        // Hapus langkah-langkah yang tidak lagi ada di formulir
+        $existingLangkahIds = array_keys($request->input('langkah', []));
+        $resep->langkahs()->whereNotIn('id', $existingLangkahIds)->delete();
+    
+        // Perbarui atau tambahkan langkah-langkah baru
+        foreach ($request->input('langkah', []) as $langkahId => $data) {
+            $langkah = Langkah::find($langkahId);
+    
+            if ($langkah) {
+                $langkah->update($data);
+            } else {
+                $resep->langkahs()->create($data);
+            }
         }
-
-        // Cek jika nomor langkah yang diupdate sudah ada
-        if (in_array($validatedData['nomor'], $existingSteps)) {
-            return redirect()->route('langkah.edit', $langkah->id)->with('error', 'Langkah ke-' . $validatedData['nomor'] . ' sudah ada untuk resep ini.');
-        }
-
-        // Check if deskripsi is empty, if so, restore the previous description
-        if (empty($validatedData['deskripsi'])) {
-            $validatedData['deskripsi'] = $langkah->deskripsi;
-        }
-
-        $langkah->update($validatedData);
-
-        return redirect()->route('langkah.index')->with('success', 'Langkah berhasil diperbarui.');
+    
+        // Redirect to the resep.index page with a success message
+        return redirect()->route('resep.index')->with('success', 'Data Resep Berhasil Diperbarui!');
     }
+    
+    
+    
+    
+    
 
 
     public function destroy(Langkah $langkah)

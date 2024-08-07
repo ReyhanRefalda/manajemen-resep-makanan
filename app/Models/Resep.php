@@ -41,8 +41,8 @@ class Resep extends Model
         return $this->belongsToMany(Bahan::class, 'resep_bahan')->withPivot('jumlah')->withTrashed();
     }
 
-    // Relasi dengan Langkah (misalnya banyak ke banyak, pastikan sesuai dengan struktur tabel)
-    public function langkah()
+    // Relasi dengan Langkah (satu ke banyak)
+    public function langkahs()
     {
         return $this->hasMany(Langkah::class);
     }
