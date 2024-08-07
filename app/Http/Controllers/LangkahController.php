@@ -116,20 +116,11 @@ class LangkahController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'resep_id' => 'required|exists:resep,id',
+        $validated = $request->validate([
             'langkah.*.deskripsi' => 'required|string',
-            'langkah.*.nomor' => 'required|integer',
-        ], [
-            // Pesan kesalahan kustom jika ada field yang tidak valid
-            'resep_id.required' => 'Resep ID harus diisi.',
-            'resep_id.exists' => 'Resep ID tidak ditemukan.',
-            'langkah.*.deskripsi.required' => 'Deskripsi langkah harus diisi.',
-            'langkah.*.deskripsi.string' => 'Deskripsi langkah harus berupa teks.',
-            'langkah.*.nomor.required' => 'Nomor langkah harus diisi.',
-            'langkah.*.nomor.integer' => 'Nomor langkah harus berupa angka.',
+            'langkah.*.nomor' => 'required|integer'
         ]);
-        
+    
         $resep = Resep::findOrFail($id);
     
         // Hapus langkah-langkah yang tidak lagi ada di formulir
