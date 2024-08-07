@@ -64,7 +64,16 @@ class LangkahController extends Controller
             'resep_id' => 'required|exists:resep,id',
             'langkah.*.deskripsi' => 'required|string',
             'langkah.*.nomor' => 'required|integer',
+        ], [
+            // Pesan kesalahan kustom jika ada field yang tidak valid
+            'resep_id.required' => 'Resep ID harus diisi.',
+            'resep_id.exists' => 'Resep ID tidak ditemukan.',
+            'langkah.*.deskripsi.required' => 'Deskripsi langkah harus diisi.',
+            'langkah.*.deskripsi.string' => 'Deskripsi langkah harus berupa teks.',
+            'langkah.*.nomor.required' => 'Nomor langkah harus diisi.',
+            'langkah.*.nomor.integer' => 'Nomor langkah harus berupa angka.',
         ]);
+    
     
         $resepId = $request->input('resep_id');
         $langkahs = $request->input('langkah', []);
@@ -107,11 +116,20 @@ class LangkahController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $validatedData = $request->validate([
+            'resep_id' => 'required|exists:resep,id',
             'langkah.*.deskripsi' => 'required|string',
-            'langkah.*.nomor' => 'required|integer'
+            'langkah.*.nomor' => 'required|integer',
+        ], [
+            // Pesan kesalahan kustom jika ada field yang tidak valid
+            'resep_id.required' => 'Resep ID harus diisi.',
+            'resep_id.exists' => 'Resep ID tidak ditemukan.',
+            'langkah.*.deskripsi.required' => 'Deskripsi langkah harus diisi.',
+            'langkah.*.deskripsi.string' => 'Deskripsi langkah harus berupa teks.',
+            'langkah.*.nomor.required' => 'Nomor langkah harus diisi.',
+            'langkah.*.nomor.integer' => 'Nomor langkah harus berupa angka.',
         ]);
-    
+        
         $resep = Resep::findOrFail($id);
     
         // Hapus langkah-langkah yang tidak lagi ada di formulir

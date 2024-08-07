@@ -55,10 +55,33 @@ class ResepController extends Controller
             'pembuat_id' => 'required|exists:pembuat,id',
             'kategori_id' => 'required|exists:kategori,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'bahan.*' => 'exists:bahan,id',
+            'bahan.*' => 'required|exists:bahan,id',
             'jumlah.*' => 'required|string',
-        ],
-    );
+        ],[
+            'nama.required' => 'Nama resep harus diisi.',
+            'nama.string' => 'Nama resep harus berupa string.',
+            'nama.max' => 'Nama resep maksimal 255 karakter.',
+            'nama.unique' => 'Nama resep sudah ada untuk pembuat ini.',
+            'deskripsi.required' => 'Deskripsi resep harus diisi.',
+            'deskripsi.string' => 'Deskripsi resep harus berupa string.',
+            'waktu_persiapan.string' => 'Waktu persiapan harus berupa string.',
+            'waktu_persiapan.required' => 'Waktu persiapan harus diisi.',
+            'waktu_memasak.string' => 'Waktu memasak harus berupa string.',
+            'waktu_memasak.required' => 'Waktu memasak harus diisi.',
+            'pembuat_id.required' => 'pembuat harus diisi.',
+            'bahan.required' => 'Bahan harus diisi.',
+            
+            'pembuat_id.exists' => 'pembuat tidak ditemukan.',
+            'kategori_id.required' => 'kategori harus diisi.',
+            'kategori_id.exists' => 'kategori tidak ditemukan.',
+            'image.required' => 'Gambar harus diisi',
+            'image.image' => 'File harus berupa gambar.',
+            'image.mimes' => 'Format gambar yang diizinkan adalah jpeg, png, jpg, dan gif.',
+            'image.max' => 'Ukuran gambar maksimal 2048 kilobyte (2 MB).',
+            'bahan.*.exists' => 'bahan tidak ditemukan.',
+            'jumlah.*.string' => 'Jumlah harus berupa string jika diisi.',
+        ]);
+    
     
         $resep = Resep::create($validatedData);
     
@@ -131,6 +154,28 @@ class ResepController extends Controller
         'langkah.*.deskripsi' => 'required|string',
         'new_step' => 'nullable|array',
         'new_step.*.deskripsi' => 'required|string',
+    ], [
+        'nama.required' => 'Nama resep harus diisi.',
+        'nama.string' => 'Nama resep harus berupa string.',
+        'nama.max' => 'Nama resep maksimal 255 karakter.',
+        'nama.unique' => 'Nama resep sudah ada untuk pembuat ini.',
+        'deskripsi.required' => 'Deskripsi resep harus diisi.',
+        'deskripsi.string' => 'Deskripsi resep harus berupa string.',
+        'waktu_persiapan.string' => 'Waktu persiapan harus berupa string.',
+        'waktu_persiapan.required' => 'Waktu persiapan harus diisi.',
+        'waktu_memasak.string' => 'Waktu memasak harus berupa string.',
+        'waktu_memasak.required' => 'Waktu memasak harus diisi.',
+        'bahan.required' => 'Bahan harus diisi.',
+        'pembuat_id.required' => 'pembuat harus diisi.',
+        'pembuat_id.exists' => 'pembuat tidak ditemukan.',
+        'kategori_id.required' => 'kategori harus diisi.',
+        'kategori_id.exists' => 'kategori tidak ditemukan.',
+        'image.required' => 'Gambar harus diisi',
+        'image.image' => 'File harus berupa gambar.',
+        'image.mimes' => 'Format gambar yang diizinkan adalah jpeg, png, jpg, dan gif.',
+        'image.max' => 'Ukuran gambar maksimal 2048 kilobyte (2 MB).',
+        'bahan.*.exists' => 'bahan tidak ditemukan.',
+        'jumlah.*.string' => 'Jumlah harus berupa string jika diisi.',
     ]);
 
     // Update resep
