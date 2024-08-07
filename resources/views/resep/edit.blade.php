@@ -26,7 +26,7 @@
 
                         <div class="mb-4">
                             <label for="nama" class="block text-gray-700 text-sm font-medium mb-1">Nama Resep</label>
-                            <input type="text" name="nama" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama" value="{{ old('nama', $resep->nama) }}">
+                            <input type="text" name="nama" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama" value="{{ old('nama') ?? $resep->nama }}">
                             @error('nama')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -34,7 +34,7 @@
 
                         <div class="mb-4">
                             <label for="deskripsi" class="block text-gray-700 text-sm font-medium mb-1">Deskripsi</label>
-                            <textarea name="deskripsi" class="form-textarea w-full border-gray-300 rounded-md shadow-sm" id="deskripsi">{{ old('deskripsi', $resep->deskripsi) }}</textarea>
+                            <textarea name="deskripsi" class="form-textarea w-full border-gray-300 rounded-md shadow-sm" id="deskripsi">{{ old('deskripsi')  ?? $resep->deskripsi }}</textarea>
                             @error('deskripsi')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -45,7 +45,7 @@
                             <select name="bahan[]" id="bahan" multiple="multiple" class="form-multiselect w-full border-gray-300 rounded-md shadow-sm">
                                 @foreach($bahans as $bahan)
                                 <option value="{{ $bahan->id }}" {{ in_array($bahan->id, old('bahan', $resep->bahans->pluck('id')->toArray())) ? 'selected' : '' }}>
-                                    {{ $bahan->nama }}
+                                    {{ old('nama')  ?? $bahan->nama }}
                                 </option>
                                 @endforeach
                             </select>
@@ -65,7 +65,7 @@
 
                         <div class="mb-4">
                             <label for="waktu_persiapan" class="block text-gray-700 text-sm font-medium mb-1">Waktu Persiapan</label>
-                            <input type="text" name="waktu_persiapan" class="form-input w-full border-gray-300 rounded-md shadow-sm @error('waktu_persiapan') border-red-500 @enderror" id="waktu_persiapan" value="{{ old('waktu_persiapan', $resep->waktu_persiapan) }}">
+                            <input type="text" name="waktu_persiapan" class="form-input w-full border-gray-300 rounded-md shadow-sm @error('waktu_persiapan') border-red-500 @enderror" id="waktu_persiapan" value="{{ old('waktu_persiapan') ?? $resep->waktu_persiapan }}">
                             @error('waktu_persiapan')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -73,7 +73,7 @@
 
                         <div class="mb-4">
                             <label for="waktu_memasak" class="block text-gray-700 text-sm font-medium mb-1">Waktu Memasak</label>
-                            <input type="text" name="waktu_memasak" class="form-input w-full border-gray-300 rounded-md shadow-sm @error('waktu_memasak') border-red-500 @enderror" id="waktu_memasak" value="{{ old('waktu_memasak', $resep->waktu_memasak) }}">
+                            <input type="text" name="waktu_memasak" class="form-input w-full border-gray-300 rounded-md shadow-sm @error('waktu_memasak') border-red-500 @enderror" id="waktu_memasak" value="{{ old('waktu_memasak')?? $resep->waktu_memasak }}">
                             @error('waktu_memasak')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -137,6 +137,7 @@
                                 <label for="langkah_{{ $langkah->id }}" class="block text-gray-700 text-sm font-medium mb-1">Langkah {{ $loop->iteration }}</label>
                                 <textarea name="langkah[{{ $langkah->id }}][deskripsi]" class="form-textarea w-full border-gray-300 rounded-md shadow-sm">{{ old('langkah.' . $langkah->id . '.deskripsi', $langkah->deskripsi) }}</textarea>
                                 <input type="hidden" name="langkah[{{ $langkah->id }}][nomor]" value="{{ $loop->iteration }}">
+                                
                             </div>
                             @endforeach
                         </div>
