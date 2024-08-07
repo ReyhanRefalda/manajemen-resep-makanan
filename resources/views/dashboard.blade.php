@@ -23,7 +23,7 @@
                     <h3 class="text-lg font-bold">{{ $resep->nama }}</h3>
                     <p class="text-gray-600">Pembuat: {{ $resep->pembuat->nama }}</p>
                     <div class="flex flex-wrap gap-2 mt-2">
-                        @forelse($resep->bahans->take(8) as $bahan)
+                        @forelse($resep->bahans->take(5) as $bahan)
                         <p class="bg-gray-100 px-2 py-1 rounded-md border border-gray-300">
                             {{ $bahan->nama }}
                         </p>
