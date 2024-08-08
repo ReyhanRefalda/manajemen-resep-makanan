@@ -17,9 +17,10 @@ class LangkahController extends Controller
         if ($search) {
             // Cari resep yang sesuai dengan nama
             $resepQuery->where('nama', 'LIKE', "%{$search}%");
+            
         }
 
-        $resep = $resepQuery->with('langkahs')->get();
+        $resep = $resepQuery->with('langkahs')->orderBy('created_at', 'desc')->get();
 
         return view('langkah.index', compact('resep'));
     }
