@@ -155,76 +155,81 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
         <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const langkahTabButton = document.getElementById('langkah-tab-button');
-    const langkahForm = document.getElementById('langkahForm');
-    const stepsContainer = document.getElementById('steps-container');
-    const resepIdInput = document.getElementById('resep_id');
-    const resepIdDisplay = document.getElementById('resep_id_display');
-    const bahanSelect = $('#bahan');
-    const jumlahContainer = document.getElementById('jumlah-container');
+            document.addEventListener('DOMContentLoaded', function() {
+                const langkahTabButton = document.getElementById('langkah-tab-button');
+                const langkahForm = document.getElementById('langkahForm');
+                const stepsContainer = document.getElementById('steps-container');
+                const resepIdInput = document.getElementById('resep_id');
+                const resepIdDisplay = document.getElementById('resep_id_display');
+                const bahanSelect = $('#bahan');
+                const jumlahContainer = document.getElementById('jumlah-container');
 
-    let jumlahInputs = {}; // To store the quantities
+                let jumlahInputs = {}; // To store the quantities
 
-    // Handle tab switching
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const tabId = this.dataset.tab;
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-            document.getElementById(`${tabId}-tab`).classList.remove('hidden');
-        });
-    });
-
-    $('#resepForm').on('submit', function(event) {
-        event.preventDefault();
-
-        var formData = new FormData(this);
-
-        $.ajax({
-            url: "{{ route('resep.store') }}",
-            type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                // Handle success
-                const resepId = response.resep.id;
-                const namaResep = response.resep.nama;
-                langkahTabButton.disabled = false;
-                resepIdInput.value = resepId;
-                resepIdDisplay.value = namaResep;
-                document.querySelector('[data-tab="langkah"]').click();
-            },
-            error: function(xhr) {
-                var errors = xhr.responseJSON.errors;
-                $('.text-red-500').remove(); // Remove previous errors
-
-                $.each(errors, function(key, messages) {
-                    var input = $('#' + key);
-                    input.addClass('border-red-500');
-                    input.after('<p class="text-red-500 text-xs mt-1">' +
-                        messages[0] + '</p>');
+                // Handle tab switching
+                document.querySelectorAll('.tab-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const tabId = this.dataset.tab;
+                        document.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.add('hidden');
+                        });
+                        document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+                    });
                 });
-            }
-        });
-    });
 
-    // Handle adding steps dynamically
-    document.getElementById('add-step').addEventListener('click', function() {
-        const stepNumber = stepsContainer.children.length + 1;
+                $('#resepForm').on('submit', function(event) {
+                    event.preventDefault();
 
-        // Remove the delete button from the previous last step, if any
-        if (stepsContainer.children.length > 0) {
-            const previousStep = stepsContainer.lastElementChild;
-            const deleteButton = previousStep.querySelector('.delete-step');
-            if (deleteButton) {
-                deleteButton.remove();
-            }
-        }
+                    var formData = new FormData(this);
 
-        const stepHtml = `
+                    $.ajax({
+                        url: "{{ route('resep.store') }}",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            if (response.success) {
+                                // Tampilkan alert dengan pesan dari server
+                                alert(response.message);
+
+                                // Aktivasi tab langkah dan update field resep_id
+                                langkahTabButton.disabled = false;
+                                resepIdInput.value = response.resep.id;
+                                resepIdDisplay.value = response.resep.nama;
+
+                                // Alihkan ke tab langkah
+                                document.querySelector('[data-tab="langkah"]').click();
+                            }
+                        },
+                        error: function(xhr) {
+                            var errors = xhr.responseJSON.errors;
+                            $('.text-red-500').remove(); // Remove previous errors
+
+                            $.each(errors, function(key, messages) {
+                                var input = $('#' + key);
+                                input.addClass('border-red-500');
+                                input.after('<p class="text-red-500 text-xs mt-1">' +
+                                    messages[0] + '</p>');
+                            });
+                        }
+                    });
+                });
+
+                // Handle adding steps dynamically
+                document.getElementById('add-step').addEventListener('click', function() {
+                    const stepNumber = stepsContainer.children.length + 1;
+
+                    // Remove the delete button from the previous last step, if any
+                    if (stepsContainer.children.length > 0) {
+                        const previousStep = stepsContainer.lastElementChild;
+                        const deleteButton = previousStep.querySelector('.delete-step');
+                        if (deleteButton) {
+                            deleteButton.remove();
+                        }
+                    }
+
+                    const stepHtml = `
             <div class="step-item" id="step-${stepNumber}">
                 <label for="langkah_${stepNumber}_deskripsi" class="block text-gray-700 text-sm font-medium mb-1">Langkah ${stepNumber}</label>
                 <textarea name="langkah[${stepNumber}][deskripsi]" id="langkah_${stepNumber}_deskripsi" class="form-textarea w-full border-gray-300 rounded-md shadow-sm"></textarea>
@@ -232,137 +237,134 @@
                 ${stepNumber > 1 ? `<button type="button" class="delete-step px-2 py-1 bg-red-500 text-white rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 mt-2">Hapus</button>` : ''}
             </div>
         `;
-        stepsContainer.insertAdjacentHTML('beforeend', stepHtml);
+                    stepsContainer.insertAdjacentHTML('beforeend', stepHtml);
 
-        // Add event listener to the delete button if it's available
-        if (stepNumber > 1) {
-            document.querySelector(`#step-${stepNumber} .delete-step`).addEventListener('click', function() {
-                const stepItem = this.closest('.step-item');
-                stepItem.remove();
+                    // Add event listener to the delete button if it's available
+                    if (stepNumber > 1) {
+                        document.querySelector(`#step-${stepNumber} .delete-step`).addEventListener('click', function() {
+                            const stepItem = this.closest('.step-item');
+                            stepItem.remove();
 
-                // Reassign step numbers and check if we need to add a delete button to the new last step
-                reassignStepNumbers();
-            });
-        }
-    });
+                            // Reassign step numbers and check if we need to add a delete button to the new last step
+                            reassignStepNumbers();
+                        });
+                    }
+                });
 
-    // Function to reassign step numbers after deletion
-    function reassignStepNumbers() {
-        const steps = document.querySelectorAll('.step-item');
-        steps.forEach((step, index) => {
-            step.id = `step-${index + 1}`;
-            step.querySelector('label').textContent = `Langkah ${index + 1}`;
-            step.querySelector('textarea').name = `langkah[${index + 1}][deskripsi]`;
-            step.querySelector('textarea').id = `langkah_${index + 1}_deskripsi`;
-            step.querySelector('input[type="hidden"]').value = index + 1;
-        });
+                // Function to reassign step numbers after deletion
+                function reassignStepNumbers() {
+                    const steps = document.querySelectorAll('.step-item');
+                    steps.forEach((step, index) => {
+                        step.id = `step-${index + 1}`;
+                        step.querySelector('label').textContent = `Langkah ${index + 1}`;
+                        step.querySelector('textarea').name = `langkah[${index + 1}][deskripsi]`;
+                        step.querySelector('textarea').id = `langkah_${index + 1}_deskripsi`;
+                        step.querySelector('input[type="hidden"]').value = index + 1;
+                    });
 
-        // Add delete button to the last step if there are more than one step
-        if (steps.length > 1) {
-            const lastStep = steps[steps.length - 1];
-            if (!lastStep.querySelector('.delete-step')) {
-                const deleteButtonHtml = `
+                    // Add delete button to the last step if there are more than one step
+                    if (steps.length > 1) {
+                        const lastStep = steps[steps.length - 1];
+                        if (!lastStep.querySelector('.delete-step')) {
+                            const deleteButtonHtml = `
                     <button type="button" class="delete-step px-2 py-1 bg-red-500 text-white rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 mt-2">Hapus</button>
                 `;
-                lastStep.insertAdjacentHTML('beforeend', deleteButtonHtml);
+                            lastStep.insertAdjacentHTML('beforeend', deleteButtonHtml);
 
-                lastStep.querySelector('.delete-step').addEventListener('click', function() {
-                    const stepItem = this.closest('.step-item');
-                    stepItem.remove();
-                    reassignStepNumbers();
-                });
-            }
-        }
-    }
+                            lastStep.querySelector('.delete-step').addEventListener('click', function() {
+                                const stepItem = this.closest('.step-item');
+                                stepItem.remove();
+                                reassignStepNumbers();
+                            });
+                        }
+                    }
+                }
 
-    // Initialize select2 for multiple selection and handle dynamic quantity inputs
-    bahanSelect.select2().on('select2:select select2:unselect', function() {
-        jumlahContainer.innerHTML = '';
-        const selectedBahan = bahanSelect.val();
+                // Initialize select2 for multiple selection and handle dynamic quantity inputs
+                bahanSelect.select2().on('select2:select select2:unselect', function() {
+                    jumlahContainer.innerHTML = '';
+                    const selectedBahan = bahanSelect.val();
 
-        selectedBahan.forEach((id) => {
-            const bahanName = bahanSelect.find(`option[value="${id}"]`).text();
-            const jumlahValue = jumlahInputs[id] || ''; // Use the stored value if available
+                    selectedBahan.forEach((id) => {
+                        const bahanName = bahanSelect.find(`option[value="${id}"]`).text();
+                        const jumlahValue = jumlahInputs[id] || ''; // Use the stored value if available
 
-            const jumlahHtml = `
+                        const jumlahHtml = `
                 <div class="mb-4">
                     <label for="jumlah_${id}" class="block text-gray-700 text-sm font-medium mb-1">Jumlah ${bahanName}</label>
                     <input type="text" name="jumlah[${id}]" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="jumlah_${id}" value="${jumlahValue}">
                 </div>
             `;
-            jumlahContainer.insertAdjacentHTML('beforeend', jumlahHtml);
+                        jumlahContainer.insertAdjacentHTML('beforeend', jumlahHtml);
 
-            // Add event listener to store input value on change
-            document.getElementById(`jumlah_${id}`).addEventListener('input', function() {
-                jumlahInputs[id] = this.value;
-            });
-        });
-    });
+                        // Add event listener to store input value on change
+                        document.getElementById(`jumlah_${id}`).addEventListener('input', function() {
+                            jumlahInputs[id] = this.value;
+                        });
+                    });
+                });
 
-    // Add a step by default on tab switch
-    langkahTabButton.addEventListener('click', function() {
-        if (stepsContainer.children.length === 0) {
-            document.getElementById('add-step').click();
-        }
-    });
-
-    var resepIndexUrl = "{{ route('resep.index') }}";
-    // Handle langkah form submission
-    langkahForm.addEventListener('submit', function(e) {
-        // Check if all step descriptions are filled
-        let allStepsFilled = true;
-        document.querySelectorAll('.step-item textarea').forEach(textarea => {
-            if (!textarea.value.trim()) {
-                allStepsFilled = false;
-            }
-        });
-
-        if (!allStepsFilled) {
-            e.preventDefault();
-            alert('Pastikan semua langkah diisi dengan deskripsi yang sesuai.');
-            return;
-        }
-
-        const formData = new FormData(langkahForm);
-        $.ajax({
-            url: "{{ route('langkah.store') }}",
-            type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                alert('Langkah berhasil disimpan!');
-                window.location.href = resepIndexUrl;
-            },
-            error: function(xhr) {
-                // Clear previous error messages
-                $('.text-red-500').remove();
-
-                // Parse error response
-                const errors = JSON.parse(xhr.responseText).errors;
-
-                // Display error messages for each field
-                for (const [field, messages] of Object.entries(errors)) {
-                    // Find the input field related to the error
-                    const input = document.querySelector(`[name="${field}"]`);
-
-                    if (input) {
-                        // Create a new error message element
-                        const errorElement = document.createElement('p');
-                        errorElement.className = 'text-red-500 text-xs mt-1';
-                        errorElement.textContent = messages.join(', ');
-
-                        // Insert error message after the input field
-                        input.insertAdjacentElement('afterend', errorElement);
+                // Add a step by default on tab switch
+                langkahTabButton.addEventListener('click', function() {
+                    if (stepsContainer.children.length === 0) {
+                        document.getElementById('add-step').click();
                     }
-                }
-            }
-        });
-    });
-});
+                });
 
+                var resepIndexUrl = "{{ route('resep.index') }}";
+                // Handle langkah form submission
+                langkahForm.addEventListener('submit', function(e) {
+                    // Check if all step descriptions are filled
+                    let allStepsFilled = true;
+                    document.querySelectorAll('.step-item textarea').forEach(textarea => {
+                        if (!textarea.value.trim()) {
+                            allStepsFilled = false;
+                        }
+                    });
 
+                    if (!allStepsFilled) {
+                        e.preventDefault();
+                        alert('Pastikan semua langkah terisi.');
+                        return;
+                    }
 
+                    const formData = new FormData(langkahForm);
+                    $.ajax({
+                        url: "{{ route('langkah.store') }}",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            alert('Langkah berhasil disimpan!');
+                            window.location.href = resepIndexUrl;
+                        },
+                        error: function(xhr) {
+                            // Clear previous error messages
+                            $('.text-red-500').remove();
+
+                            // Parse error response
+                            const errors = JSON.parse(xhr.responseText).errors;
+
+                            // Display error messages for each field
+                            for (const [field, messages] of Object.entries(errors)) {
+                                // Find the input field related to the error
+                                const input = document.querySelector(`[name="${field}"]`);
+
+                                if (input) {
+                                    // Create a new error message element
+                                    const errorElement = document.createElement('p');
+                                    errorElement.className = 'text-red-500 text-xs mt-1';
+                                    errorElement.textContent = messages.join(', ');
+
+                                    // Insert error message after the input field
+                                    input.insertAdjacentElement('afterend', errorElement);
+                                }
+                            }
+                        }
+                    });
+                });
+            });
         </script>
 
     </x-app-layout>
