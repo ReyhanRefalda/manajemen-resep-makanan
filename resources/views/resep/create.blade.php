@@ -10,10 +10,14 @@
             <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto p-6">
                 <div class="border-b border-gray-200">
                     <nav class="flex space-x-4">
-                        <button type="button" class="tab-button py-2 px-4 text-gray-700 font-semibold border-b-2 border-transparent hover:border-gray-300 focus:outline-none" data-tab="resep">
+                        <button type="button"
+                            class="tab-button py-2 px-4 text-gray-700 font-semibold border-b-2 border-transparent hover:border-gray-300 focus:outline-none"
+                            data-tab="resep">
                             Resep
                         </button>
-                        <button type="button" class="tab-button py-2 px-4 text-gray-700 font-semibold border-b-2 border-transparent hover:border-gray-300 focus:outline-none" data-tab="langkah" id="langkah-tab-button" disabled>
+                        <button type="button"
+                            class="tab-button py-2 px-4 text-gray-700 font-semibold border-b-2 border-transparent hover:border-gray-300 focus:outline-none"
+                            data-tab="langkah" id="langkah-tab-button" disabled>
                             Langkah
                         </button>
                     </nav>
@@ -23,24 +27,28 @@
                 <div class="mt-4">
                     <!-- Resep Tab -->
                     <div id="resep-tab" class="tab-content">
-                        <form id="resepForm" action="{{ route('resep.store') }}" method="POST" enctype="multipart/form-data">
+                        <form id="resepForm" action="{{ route('resep.store') }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <!-- Nama Resep -->
                             <div class="mb-4">
                                 <label for="nama" class="block text-gray-700 text-sm font-medium mb-1">Nama
                                     Resep</label>
-                                <input type="text" name="nama" class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama" value="{{ old('nama') }}">
+                                <input type="text" name="nama"
+                                    class="form-input w-full border-gray-300 rounded-md shadow-sm" id="nama"
+                                    value="{{ old('nama') }}">
                                 @error('nama')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <!-- Deskripsi -->
                             <div class="mb-4">
-                                <label for="deskripsi" class="block text-gray-700 text-sm font-medium mb-1">Deskripsi</label>
+                                <label for="deskripsi"
+                                    class="block text-gray-700 text-sm font-medium mb-1">Deskripsi</label>
                                 <textarea name="deskripsi" class="form-textarea w-full border-gray-300 rounded-md shadow-sm" id="deskripsi">{{ old('deskripsi') }}</textarea>
                                 @error('deskripsi')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
@@ -48,82 +56,96 @@
                             <div class="mb-4">
                                 <label for="bahan" class="block text-gray-700 text-sm font-medium mb-1">Pilih
                                     Bahan</label>
-                                <select name="bahan[]" id="bahan" multiple="multiple" class="form-multiselect w-full border-gray-300 rounded-md shadow-sm">
+                                <select name="bahan[]" id="bahan" multiple="multiple"
+                                    class="form-multiselect w-full border-gray-300 rounded-md shadow-sm">
                                     @foreach ($bahans as $bahan)
-                                    <option value="{{ $bahan->id }}" {{ in_array($bahan->id, old('bahan', [])) ? 'selected' : '' }}>
-                                        {{ $bahan->nama }}
-                                    </option>
+                                        <option value="{{ $bahan->id }}"
+                                            {{ in_array($bahan->id, old('bahan', [])) ? 'selected' : '' }}>
+                                            {{ $bahan->nama }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                @error('bahan')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
+                               
                             </div>
 
                             <!-- Dynamic Jumlah Bahan Input Fields -->
                             <div class="mb-4" id="jumlah-container">
                                 <!-- Input fields will be dynamically added here -->
+                                
                             </div>
 
                             <!-- Other Fields -->
                             <div class="mb-4">
                                 <label for="waktu_persiapan" class="block text-gray-700 text-sm font-medium mb-1">Waktu
                                     Persiapan</label>
-                                <input type="text" name="waktu_persiapan" class="form-input w-full border-gray-300 rounded-md shadow-sm @error('waktu_persiapan') border-red-500 @enderror" id="waktu_persiapan" value="{{ old('waktu_persiapan') }}">
+                                <input type="text" name="waktu_persiapan"
+                                    class="form-input w-full border-gray-300 rounded-md shadow-sm @error('waktu_persiapan') border-red-500 @enderror"
+                                    id="waktu_persiapan" value="{{ old('waktu_persiapan') }}">
                                 @error('waktu_persiapan')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="mb-4">
                                 <label for="waktu_memasak" class="block text-gray-700 text-sm font-medium mb-1">Waktu
                                     Memasak</label>
-                                <input type="text" name="waktu_memasak" class="form-input w-full border-gray-300 rounded-md shadow-sm @error('waktu_memasak') border-red-500 @enderror" id="waktu_memasak" value="{{ old('waktu_memasak') }}">
+                                <input type="text" name="waktu_memasak"
+                                    class="form-input w-full border-gray-300 rounded-md shadow-sm @error('waktu_memasak') border-red-500 @enderror"
+                                    id="waktu_memasak" value="{{ old('waktu_memasak') }}">
                                 @error('waktu_memasak')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="mb-4">
-                                <label for="kategori_id" class="block text-gray-700 text-sm font-medium mb-1">Kategori</label>
-                                <select name="kategori_id" id="kategori_id" class="form-select w-full border-gray-300 rounded-md shadow-sm @error('kategori_id') border-red-500 @enderror">
+                                <label for="kategori_id"
+                                    class="block text-gray-700 text-sm font-medium mb-1">Kategori</label>
+                                <select name="kategori_id" id="kategori_id"
+                                    class="form-select w-full border-gray-300 rounded-md shadow-sm @error('kategori_id') border-red-500 @enderror">
                                     <option value="">Pilih Kategori</option>
                                     @foreach ($kategoris as $kategori)
-                                    <option value="{{ $kategori->id }}" {{ old('kategori_id') == $kategori->id ? 'selected' : '' }}>
-                                        {{ $kategori->nama }}
-                                    </option>
+                                        <option value="{{ $kategori->id }}"
+                                            {{ old('kategori_id') == $kategori->id ? 'selected' : '' }}>
+                                            {{ $kategori->nama }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('kategori_id')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="mb-4">
-                                <label for="pembuat_id" class="block text-gray-700 text-sm font-medium mb-1">Pembuat</label>
-                                <select name="pembuat_id" id="pembuat_id" class="form-select w-full border-gray-300 rounded-md shadow-sm @error('pembuat_id') border-red-500 @enderror">
+                                <label for="pembuat_id"
+                                    class="block text-gray-700 text-sm font-medium mb-1">Pembuat</label>
+                                <select name="pembuat_id" id="pembuat_id"
+                                    class="form-select w-full border-gray-300 rounded-md shadow-sm @error('pembuat_id') border-red-500 @enderror">
                                     <option value="">Pilih Pembuat</option>
                                     @foreach ($pembuat as $p)
-                                    <option value="{{ $p->id }}" {{ old('pembuat_id') == $p->id ? 'selected' : '' }}>{{ $p->nama }}
-                                    </option>
+                                        <option value="{{ $p->id }}"
+                                            {{ old('pembuat_id') == $p->id ? 'selected' : '' }}>{{ $p->nama }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('pembuat_id')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div class="mb-4">
                                 <label for="image" class="block text-gray-700 text-sm font-medium mb-1">Image</label>
-                                <input type="file" name="image" class="form-input w-full border-gray-300 rounded-md shadow-sm @error('image') border-red-500 @enderror" id="image">
+                                <input type="file" name="image"
+                                    class="form-input w-full border-gray-300 rounded-md shadow-sm @error('image') border-red-500 @enderror"
+                                    id="image">
                                 @error('image')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <!-- Submit Button -->
                             <div class="flex justify-end">
-                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Next</button>
+                                <button type="submit"
+                                    class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Next</button>
                             </div>
                         </form>
                     </div>
@@ -133,8 +155,10 @@
                             @csrf
                             <input type="hidden" name="resep_id" id="resep_id">
                             <div class="mb-4">
-                                <label for="resep_id_display" class="block text-gray-700 text-sm font-medium mb-1">Resep</label>
-                                <input type="text" id="resep_id_display" class="form-input w-full border-gray-300 rounded-md shadow-sm" disabled>
+                                <label for="resep_id_display"
+                                    class="block text-gray-700 text-sm font-medium mb-1">Resep</label>
+                                <input type="text" id="resep_id_display"
+                                    class="form-input w-full border-gray-300 rounded-md shadow-sm" disabled>
                             </div>
 
                             <div id="steps-container" class="flex flex-col space-y-4">
@@ -142,8 +166,12 @@
                             </div>
 
                             <div class="flex space-x-2">
-                                <button type="button" id="add-step" class="px-4 py-2 bg-green-500 text-white rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">Tambah Langkah</button>
-                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Simpan Langkah</button>
+                                <button type="button" id="add-step"
+                                    class="px-4 py-2 bg-green-500 text-white rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">Tambah
+                                    Langkah</button>
+                                <button type="submit"
+                                    class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Simpan
+                                    Langkah</button>
                             </div>
                         </form>
                     </div>
@@ -151,6 +179,45 @@
                 </div>
             </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const defaultTabId = 'resep'; // Tab default saat halaman dimuat
+
+                // Set tab default
+                const defaultTabButton = document.querySelector(`[data-tab="${defaultTabId}"]`);
+                const defaultTabContent = document.getElementById(`${defaultTabId}-tab`);
+
+                defaultTabButton.classList.add('bg-orange-500', 'text-white', 'rounded-tl-lg', 'rounded-tr-lg');
+                defaultTabButton.classList.remove('text-gray-700');
+                defaultTabContent.classList.remove('hidden');
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Remove 'bg-orange-500' and 'text-white' from all tabs
+                        tabButtons.forEach(btn => {
+                            btn.classList.remove('bg-orange-500', 'text-white', 'rounded-tl-lg',
+                                'rounded-tr-lg');
+                            btn.classList.add('text-gray-700');
+                        });
+
+                        // Add 'bg-orange-500' and 'text-white' to the clicked tab
+                        this.classList.add('bg-orange-500', 'text-white', 'rounded-tl-lg',
+                            'rounded-tr-lg');
+                        this.classList.remove('text-gray-700');
+
+                        // Hide all tab contents
+                        document.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.add('hidden');
+                        });
+
+                        // Show the selected tab content
+                        const tabId = this.dataset.tab;
+                        document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+                    });
+                });
+            });
+        </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
@@ -241,13 +308,14 @@
 
                     // Add event listener to the delete button if it's available
                     if (stepNumber > 1) {
-                        document.querySelector(`#step-${stepNumber} .delete-step`).addEventListener('click', function() {
-                            const stepItem = this.closest('.step-item');
-                            stepItem.remove();
+                        document.querySelector(`#step-${stepNumber} .delete-step`).addEventListener('click',
+                            function() {
+                                const stepItem = this.closest('.step-item');
+                                stepItem.remove();
 
-                            // Reassign step numbers and check if we need to add a delete button to the new last step
-                            reassignStepNumbers();
-                        });
+                                // Reassign step numbers and check if we need to add a delete button to the new last step
+                                reassignStepNumbers();
+                            });
                     }
                 });
 

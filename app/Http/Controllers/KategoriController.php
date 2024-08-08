@@ -13,7 +13,7 @@ class KategoriController extends Controller
         $search = $request->get('search');
         $kategoris = Kategori::when($search, function ($query, $search) {
             return $query->where('nama', 'like', "%{$search}%");
-        })->get();
+        })->orderBy('created_at', 'desc')->get();
 
         return view('kategori.index', compact('kategoris', 'search'));
     }

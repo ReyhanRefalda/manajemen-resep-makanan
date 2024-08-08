@@ -12,14 +12,21 @@ class BahanController extends Controller
         $query = Bahan::query();
 
         if ($request->has('search')) {
-            $query->where('nama', 'like', '%' . $request->search . '%');
+            // Pisahkan kata-kata pencarian
+            $searchTerms = explode(' ', $request->search);
+
+            // Menambahkan kondisi pencarian untuk setiap kata
+            $query->where(function ($query) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $query->where('nama', 'like', '%' . $term . '%');
+                }
+            });
         }
 
-        $bahans = $query->get();
+        $bahans = $query->orderBy('created_at', 'desc')->get();
 
         return view('bahan.index', compact('bahans'))->with('searchQuery', $request->search);
     }
-
     public function create()
     {
         return view('bahan.create');
@@ -58,7 +65,7 @@ class BahanController extends Controller
     {
         // Ambil nama bahan yang lama
         $oldNama = $bahan->nama;
-    
+
         // Validasi
         $request->validate([
             'nama' => [
@@ -77,12 +84,12 @@ class BahanController extends Controller
             'nama.string' => 'Nama bahan harus berupa huruf',
             'nama.max' => 'Nama bahan tidak boleh lebih dari 255 karakter',
         ]);
-    
+
         // Perbarui data jika ada perubahan
         if ($request->nama !== $oldNama) {
             $bahan->update($request->all());
         }
-    
+
         return redirect()->route('bahan.index')->with('success', 'Bahan berhasil diperbarui.');
     }
 

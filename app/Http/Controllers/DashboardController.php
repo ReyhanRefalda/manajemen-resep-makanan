@@ -14,11 +14,22 @@ class DashboardController extends Controller
 
         $reseps = Resep::with('kategori', 'pembuat', 'bahans')
             ->when($search, function ($query, $search) {
-                return $query->where('nama', 'like', '%' . $search . '%')
-                             ->orWhereHas('bahans', function($query) use ($search) {
-                                 $query->where('nama', 'like', '%' . $search . '%');
-                             });
+                // Pisahkan kata-kata pencarian
+                $searchTerms = explode(' ', $search);
+
+                // Menambahkan kondisi pencarian untuk setiap kata
+                $query->where(function ($query) use ($searchTerms) {
+                    foreach ($searchTerms as $term) {
+                        $query->where(function ($query) use ($term) {
+                            $query->where('nama', 'like', '%' . $term . '%')
+                                ->orWhereHas('bahans', function ($query) use ($term) {
+                                    $query->where('nama', 'like', '%' . $term . '%');
+                                });
+                        });
+                    }
+                });
             })
+            ->orderBy('created_at', 'desc') // Mengurutkan berdasarkan waktu pembuatan terbaru
             ->get();
 
         return view('dashboard', compact('reseps', 'search'));
