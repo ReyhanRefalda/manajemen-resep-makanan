@@ -25,7 +25,6 @@ class LangkahController extends Controller
     }
 
 
-
     public function create(Request $request)
     {
         $resep_id = $request->query('resep_id');
@@ -43,10 +42,6 @@ class LangkahController extends Controller
     }
     
     
-    
-
-
-
     public function massDestroy(Request $request)
     {
         $ids = $request->input('ids');
@@ -58,6 +53,7 @@ class LangkahController extends Controller
 
         return redirect()->route('langkah.index')->with('error', 'Tidak ada langkah yang dipilih untuk dihapus.');
     }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -93,16 +89,6 @@ class LangkahController extends Controller
         return redirect()->route('resep.index')->with('success', 'Langkah berhasil disimpan!');
     }
     
-    
-    
-    
-    
-    
-
-    
-    
-    
-
     public function show(Langkah $langkah)
     {
         return view('langkah.show', compact('langkah'));
@@ -143,10 +129,6 @@ class LangkahController extends Controller
     }
     
     
-    
-    
-    
-
 
     public function destroy(Langkah $langkah)
     {

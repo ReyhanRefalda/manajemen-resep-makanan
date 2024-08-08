@@ -112,11 +112,6 @@ class ResepController extends Controller
     }
     
 
-
-
-
-
-
     public function show(Resep $resep)
     {
         return view('resep.show', compact('resep'));
@@ -133,7 +128,7 @@ class ResepController extends Controller
     
 
 
-  // ResepController.php
+ 
 
   public function update(Request $request, Resep $resep)
 {
@@ -216,7 +211,7 @@ class ResepController extends Controller
         }
     }
 
-    // Add new langkahs
+    // Menambahkan Langkah baru
     if ($request->has('new_step')) {
         foreach ($request->new_step as $newLangkah) {
             Langkah::create([
